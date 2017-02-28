@@ -1,0 +1,321 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+{% if power < 100 %}
+<div style="margin-bottom: 15px;margin-top: -45px;">
+<button class="btn btn-block btn-default btn-flat" style="width:80px;float:right;">
+<a href="/operation/vpn/log/" style="margin-bottom: 15px;margin-top: -45px;z-index: 999999;position: relative;">详细日志</a></button>
+
+<button class="btn btn-block btn-default btn-flat" style="width:80px;float:right;margin-right: 10px;
+    margin-top: 0px;">
+<a href="/operation/vpn/user/" style="margin-bottom: 15px;margin-top: -45px;z-index: 999999;position: relative;">用户管理</a></button>
+
+<button class="btn btn-block btn-default btn-flat" style="width:80px;float:right;margin-right: 10px;
+    margin-top: 0px;">
+<a href="/operation/vpn/syschecklog/" style="margin-bottom: 15px;margin-top: -45px;z-index: 999999;position: relative;">审核日志</a></button>
+
+<button class="btn btn-block btn-default btn-flat" style="width:80px;float:right;margin-right: 10px;margin-top: 0px;"><a href="#" data-toggle="modal" data-target="#myModal">新增用户</a></button>
+
+<div style="clear:both"></div>
+</div>
+{% endif %}
+<div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-laptop"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">VPN Node</span>
+              <span class="info-box-number" style="font-size:40px;">{{node_num}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="ion ion-ios-people-outline"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text"> User</span>
+              <span class="info-box-number" style="font-size:40px;">{{user_num}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="glyphicon glyphicon-arrow-up"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Online</span>
+              <span class="info-box-number" style="font-size:40px;">{{online_user_num}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="glyphicon glyphicon-transfer"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">Total Tran</span>
+              <span class="info-box-number" style="font-size:40px;">{%if total_tra > 0 %}{% unit_convert_start_kb total_tra %}{%else%}0{%endif%}<small></small></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+
+
+<div  class="row">
+
+<div class="col-md-6" style="width:66.66%;height: 410px;">
+<!-- LINE CHART -->
+<div class="box box-info" style="height: 410px;">
+  <div class="box-header with-border">
+    <h3 class="box-title">Line Chart</h3>
+
+    
+  </div>
+  <div class="box-body chart-responsive">
+    <div class="chart" id="line-chart" style="height: 300px;"></div>
+  </div>
+  <!-- /.box-body -->
+</div>
+</div>
+
+
+
+<div class="col-md-4" >
+ <!-- Info Boxes Style 2 -->
+          <div class="info-box bg-yellow">
+            <span class="info-box-icon"><i class="fa fa-fw fa-send-o"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">今天传输的总流量</span>
+              <span class="info-box-number">{% unit_convert_start_kb today_total_tra %}</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 50%"></div>
+              </div>
+                  <span class="progress-description">
+                    注：此统计非实时统计
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+          <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="fa fa-fw fa-street-view"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">今天上线的总用户量</span>
+              <span class="info-box-number">{{today_login_user_num}} 个</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 20%"></div>
+              </div>
+                  <span class="progress-description">
+                    注：含当前在线的用户
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+          <div class="info-box bg-red">
+            <span class="info-box-icon"><i class="fa fa-fw fa-heartbeat"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">今天登录用户量最多的节点</span>
+              <span class="info-box-number">{{login_top_node}}</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 70%"></div>
+              </div>
+                  <span class="progress-description">
+                    登录次数:{{login_top_node_user_num}}/{{login_top_node_user_total}}
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+          <div class="info-box bg-aqua">
+            <span class="info-box-icon"><i class="fa fa-fw fa-user-plus"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">待审核的用户量</span>
+              <span class="info-box-number">{{wait_check_num}}
+              {% if power < 100 %}
+              <button type="button" class="btn btn-block btn-success btn-xs" style="width: 50px;float: right;margin-bottom: -5px;">
+             	 <a href="/operation/vpn/check/" style="color:#ffffff;">去审核</a>
+              </button>
+              {% endif %}
+              </span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 40%"></div>
+              </div>
+                  <span class="progress-description">
+                    共审核通过了{{check_num}} 名用户
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+
+</div>
+<div style="clear:both"></div>
+</div>
+
+
+<div class="box">
+  <div class="box-header">
+    <h3 class="box-title">用户状态</h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table id="example1" class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th>用户名</th>
+        <th>登录IP</th>
+        <th>内网IP</th>
+        <th>登录时间</th>
+        <th>流量(总)</th>
+        <th>VPN服务器 </th>
+        {% if power < 99 %}
+        <th>操作 </th>
+        {% endif %}
+      </tr>
+      </thead>
+      <tbody>
+      {% if not login_top_node_user_num == '0' %}
+      {% for x in online_user_info %}
+      <tr>
+        <td><i class="fa fa-fw fa-user"></i>{{x.2}}</td>
+        <td>{{x.3}}</td>
+        <td>{{x.5}}</td>
+        <td>{% date_con x.1 %}</td>
+        <td><i class="fa fa-fw fa-cloud-download" title="通过VPN传输到内网的流量"></i> - {% unit_convert_start_kb x.10 %} / <i class="fa fa-fw fa-cloud-upload" title="通过VPN传输到用户电脑的流量"></i> - {% unit_convert_start_kb x.11 %}</td>
+        <td>{{x.8}}</td>
+        {% if power < 99 %}
+        <td><a class="btn btn-danger" href="/operation/vpn/userkill/{{x.2}}/{{x.8}}">踢了</a></td>
+      	{% endif %}
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td>今天暂无人登录......</td>
+      </tr>
+      {% endif %}
+      </tbody>
+      <tfoot>
+      <tr><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
+
+
+
+<div class="modal fade" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content" style="margin-top: 100px;">
+            <form action="/operation/vpn/manageadduser/" method="post" id="reject_form">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                 
+                <h4 class="modal-title">新增用户信息</h4>
+              </div>
+              <div class="modal-body">
+               <input type="text" id="username" name="username" class="form-control" style="width:30%;" placeholder="请输入用户邮箱" >
+       	<label style="float:right;margin-right:48%;margin-top:-30px;font-size:18px;font-weight: 400;">@howbuy.com</label>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">确定</button>
+            </div>
+            </form>
+              </div>
+          </div>
+          
+</div>
+
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="/static/plugins/morris/morris.min.js"></script>
+<script src="/static/dist/js/demo.js"></script>
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- page script -->
+<script>
+$(function () {
+	 // LINE CHART
+    var line = new Morris.Line({
+      element: 'line-chart',
+      resize: true,
+      data: [
+        {y: '2011 Q1', item1: 2666, item2:5999},
+        {y: '2011 Q2', item1: 2778, item2:7999},
+        {y: '2011 Q3', item1: 4912, item2:4999},
+        {y: '2011 Q4', item1: 3767, item2:3999},
+        {y: '2012 Q1', item1: 6810, item2:6999},
+        {y: '2012 Q2', item1: 5670, item2:2999},
+        {y: '2012 Q3', item1: 4820, item2:1999},
+        {y: '2012 Q4', item1: 15073, item2:2999},
+        {y: '2013 Q1', item1: 10687, item2:5999},
+        {y: '2013 Q2', item1: 8432, item2:8999}
+      ],
+      xkey: 'y',
+      ykeys: ['item1','item2'],
+      labels: ['Item 1','Item 1'],
+      lineColors: ['#3c8dbc', '#a0d0e0'],
+      hideHover: 'auto'
+    });
+
+
+});
+
+</script>
+
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

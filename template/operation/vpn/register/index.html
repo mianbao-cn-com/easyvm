@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>好买VPN自助管理平台--好买运维部</title>
+<link type="text/css" href="/static/css/css.css" rel="stylesheet" />
+<link rel="SHORTCUT ICON" href="/static/favicon.ico">
+<script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+
+</head>
+
+<body>
+<script type="text/javascript">
+	function Change(){
+		var register_mail = $("#mail").val();
+		if(register_mail != ''){
+			$.ajax({
+				url:"/Ajax/"+register_mail+"/vpn/checkuser/",
+				type:"POST",
+				success:function(arg){
+					if(arg == 0){
+						$("#send_rs").html("");
+						$("#asset_submit").removeAttr("disabled");
+						$("#asset_submit").css("background","#f60");
+					}else{
+						$("#asset_submit").html='Update Passwd'
+						console.log('yes')
+					}
+				}
+				
+			})
+		}
+	}
+</script>
+ 
+  <div class="content">
+   <div class="web-width">
+     <div class="for-liucheng">
+     <div style="width:100%;height:49px;"></div>
+      <div class="liulist for-cur"></div>
+      <div class="liulist"></div>
+      <div class="liulist"></div>
+      <div class="liulist"></div>
+      <div class="liutextbox">
+       <div class="liutext for-cur"><em>1</em><br /><strong>验证邮箱及企业信息</strong></div>
+       <div class="liutext"><em>2</em><br /><strong>填写vpn账户信息</strong></div>
+       <div class="liutext"><em>3</em><br /><strong>审核</strong></div>
+       <div class="liutext"><em>4</em><br /><strong>完成</strong></div>
+      </div>
+     </div><!--for-liucheng/-->
+     {% if rs == 0 %}
+     <form action="/operation/vpn/register/" method="post" class="forget-pwd">
+       <dl>
+        
+        <dd>
+        <input type="text" style="width:270px;float: left;height: 42px;line-height: 42px;padding: 0 15px;border-radius: 6px;box-shadow: 0 2px 3px 0 rgba(0,0,0,.1) inset;font-size: 14px;" value="" name="mail" id="mail" placeholder="邮箱地址前缀" onblur="Change(this);"/>
+        <input value = "{{mail_add}}" style="float: left;border: 0px;width: 100px;margin-left: -105px;height: 42px;line-height: 42px;font-size: 14px;color: black;" readonly="value" /></dd>
+       </dl>
+       <div class="subtijiao" id="button_div"">
+       <button type="submit" disabled id="asset_submit" style="background:#827F7D;height: 42px;line-height: 42px;margin-left: -70px;position: absolute;z-index: 99;">确定添加</button></div>
+       <div id="send_rs" name="send_rs" style="width: 180px;float: right;margin-top: 13px;color: red;margin-right: 313px;font-size: 14px;">{{mes}}</div>
+       <div class="clears"></div>
+      </form><!--forget-pwd/-->
+      
+      <div style="width: 55%;margin-top: -250px;margin-left: auto;margin-right: auto;font-size:14px;border: 1px solid #cdcdcd;padding: 20px;">
+	  <div style="margin-top: -33px;color: red;width: 75px;font-size: 18px;background: white;">注册需知</div><br/>
+	  <label>欢迎使用公司内部VPN自助申请管理系统，如需注册请参照如下步骤进行操作：</label><br/>
+	  <label>1.在此填写申请信息的同时，您还需发送申请邮件至部门负责人邮箱进行申请，并同时抄送<label style="color:red;"> infra@howbuy.com（不抄送，我们将拒绝审批）</label></label><br/>
+	  <label>2.请部门负责人进行申请邮件的明确审批，比如回复："同意"等，明确应允的答复。</label><br/>
+	  <label>3.回复后请耐心等待运维人员审核，审核成功后，会有开通邮件发送至申请邮箱，请注意查收！</label><br/>
+	 </div>
+      {% else %}
+      <div class="forget-pwd">
+      <img src="/static/img/right.jpg" style="width: 80px;vertical-align: middle;margin-right: 25px;">
+      <label style="font-size:14px;">注册链接已发送至申请邮箱，请查收邮件并通过认证！</label>
+      </div>
+      {% endif %}
+   </div><!--web-width/-->
+  </div><!--content/-->
+  
+  
+</body>
+</html>

@@ -1,0 +1,116 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+
+ 
+<style>
+#user table td {line-height:34px;}
+</style>
+
+<div class="box" id="user">
+	<div class="box-header">
+		<h3 class="box-title">虚拟交换机</h3>
+	</div>
+<!-- /.box-header -->
+	<div class="box-body">
+		<table id="example1" class="table table-bordered table-striped">
+        	<thead>
+            	<tr>
+                    <th>名称</th>
+                    <th>Vlan</th>
+					<th>所在交换机</th>
+					<th>类型</th>
+					<th>所属VCenter</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for network in node_networks %}
+			<tr>
+				<td>{{network.name}}</td>
+				<td>{{network.vlan}}</td>
+				<td>{{network.vswitch}}</td>
+				<td>{% Converttypes network.type %}</td>
+				<td class="center">{% GetvCenter network.conn %}</td>
+				<th>
+				{% if nowtime > network.times|add:"0" %}
+					<span class="label label-warning" title="可能因为后台编辑此网卡，导致获取不到">更新超时</span>
+				{% else %}
+					<span class="label label-success">正常状态</span>
+				{% endif %}
+				</th>
+				<td class="center">
+				{% if permission.user_update%}
+				{% if network.type == 1 %}
+					<a class="btn btn-info" href="/vMware/network/edit/{{network.conn}}/{{network.name}}/">
+					<i class="halflings-icon white fa fa-fw fa-edit"></i>
+					</a>
+				{% else %}
+					<button class="btn btn-default">
+						<i class="halflings-icon white fa fa-fw fa-edit"></i>  
+					</button>
+				{% endif %}
+				{% endif %}
+				
+				{% if permission.user_del%}
+				{% if nowtime > network.times|add:"0" %}
+					<a class="btn btn-danger" href="/vMware/network/del/{{network.conn}}/{{network.name}}/{{network.vswitch}}/">
+					<i class="halflings-icon white fa fa-fw fa-trash"></i> 
+					</a>
+				{% else %}
+					<button class="btn btn-default">
+						<i class="halflings-icon white fa fa-fw fa-trash"></i> 
+					</button>
+				{% endif %}
+				{% endif %}
+				
+				</td>           
+			</tr>
+			{% endfor%}  
+            </tbody>
+                <tfoot>
+                <tr>
+                  	<th>名称</th>
+                    <th>Vlan</th>
+					<th>所在交换机</th>
+					<th>类型</th>
+                    <th>状态</th>
+                    <th>所属VCenter</th>
+                    <th>操作</th>
+                </tr>
+                </tfoot>
+        </table>
+    </div>
+<!-- /.box-body -->
+</div>
+
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

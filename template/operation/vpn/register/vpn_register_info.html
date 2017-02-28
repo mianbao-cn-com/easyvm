@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="Author" contect="http://www.webqin.net">
+<title>填写vpn账户信息--好买运维部</title>
+<link rel="shortcut icon" href="images/favicon.ico" />
+<link type="text/css" href="/static/css/css.css" rel="stylesheet" />
+</head>
+<script>
+function checkpasswd(){
+	var pwd1=document.getElementById('pwd1').value
+	var pwd2=document.getElementById('pwd2').value
+	if(pwd1 == pwd2){
+		return true;
+	}else{
+		window.alert('您两次填写的密码不一样！')
+		return false;
+	}
+}
+</script>
+<body>
+
+  <div class="content">
+   <div class="web-width">
+     <div class="for-liucheng">
+     <div style="width:100%;height:49px;"></div>
+      <div class="liulist for-cur"></div>
+      <div class="liulist for-cur"></div>
+      <div class="liulist"></div>
+      <div class="liulist"></div>
+      <div class="liutextbox">
+       <div class="liutext for-cur"><em>1</em><br /><strong>验证邮箱及企业信息</strong></div>
+       <div class="liutext for-cur"><em>2</em><br /><strong>填写vpn账户信息</strong></div>
+       <div class="liutext"><em>3</em><br /><strong>审核</strong></div>
+       <div class="liutext"><em>4</em><br /><strong>完成</strong></div>
+      </div>
+     </div><!--for-liucheng/-->
+     <form action="/operation/vpn/insert/" method="post" class="forget-pwd" id="vpn_info" name="vpn_info">
+       <dl>
+        <dt>用户名：</dt>
+        <dd><input type="text" value="{{username}}" readonly="value"/></dd>
+        <div class="clears"></div>
+       </dl>
+       <dl class="sel-yzsj">
+        <dt>已验证邮箱：</dt>
+        <dd><input type="text" value="{{mail}}" readonly  /></dd>
+        <div class="clears"></div>
+       </dl>
+       <dl class="sel-yzyx">
+        <dt>密码：</dt>
+        <dd><input type="password" value="" id="pwd1" name="pwd1"/></dd>
+        <div class="clears"></div>
+       </dl>
+       <dl>
+        <dt>确认密码：</dt>
+        <dd><input type="password" value="" id="pwd2" name="pwd2"/></dd>
+        <div class="clears"></div>
+       </dl>
+       <div class="subtijiao"><input type="submit" value="提交" onclick="return checkpasswd()"/></div> 
+      <input type="hidden" value="{{id}}" id="id" name="id"/>
+      <input type="hidden" value="{{check}}" id="check" name="check"/>
+      </form><!--forget-pwd/-->
+   </div><!--web-width/-->
+  </div><!--content/-->
+  
+</body>
+</html>

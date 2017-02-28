@@ -1,0 +1,233 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+<style>
+#asset_add {margin-left: -5px;border: 1px solid #b4cef8;margin-bottom:30px;background: #ffffff;font-family: font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;}
+.div_width {width:100%;}
+.left {width:48%;float:left;display:block;min-height: 30px;margin-left:2%}
+.asset_input {width:95%}
+.asset_input input:hover{border:1px solid #red; color:#0C0;}
+.asset_input input:focus{border:1px solid #fe6102; color:#0C0;}
+#asset_add h3 {border-bottom: 1px solid #eee;padding-bottom: 5px;margin: 15px 1% 20px 2% !important;font-weight: 300;font-size: 24.5px;line-height: 40px;}
+#selectError2_chzn {width:165px;}
+#asset_add label {line-height:35px;font-weight:normal;}
+#first {line-height:35px;font-weight:normal;}
+</style>
+<ul class="timeline">
+<li>
+	<i class="glyphicon glyphicon-map-marker  bg-blue"></i>
+	<div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con history_now.Asset_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">Now</a> ...</h3>
+
+            <div class="timeline-body">
+                <div><a href="/asset/detail/{{history_now.id}}/">查看</a></div>
+            </div>
+    </div>
+</li>
+
+
+{% for history in history_round%}
+	<li>
+		<i class="fa fa-history bg-aqua"></i>
+		<div class="timeline-item">
+	            <span class="time"><i class="fa fa-clock-o"></i>  {% time_con history.Asset_time %}</span>
+	
+	            <h3 class="timeline-header"><a href="#"> {% day_con history.Asset_time %}</a> ...</h3>
+	
+	            <div class="timeline-body">
+	                <div><a href="/asset/history/{{history.id}}/">查看</a></div>
+	            </div>
+	    </div>
+	</li>
+{% endfor %}
+
+<li>
+<i class="fa fa-history bg-aqua"></i>
+
+<div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% date_con Asset_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">历史详情</a> ...</h3>
+
+            <div class="timeline-body">
+            
+<div id="asset_add " class="first timeline-item ">
+	<div>
+	<div class="div_width">
+		<div><h3>资产信息</h3>
+		<div style="float: right;margin-top: -45px;margin-right:15px;"></div>
+		</div>
+		<div class="left">
+			资产编号 : {{Asset_num}}
+		</div>
+		<div class="left">
+			IP地址 : {{Ip_address}}
+		</div>
+		<div class="left">
+			系统版本 : {{System_version}}
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			服务器类型 : {{Type}}
+			</div>
+			<div style="width:30%;float:left;min-height: 30px;margin-left:17%">
+			服务器U数 : {{itroot_server_u}}U
+			
+			</div>
+		</div>
+		<div class="left">
+		<div style="width:30%;float:left;min-height: 30px;">
+			供应商 : {{Server_firm}}
+			
+		</div>
+		<div style="width:25%;float:left;min-height: 30px;margin-left:2%">
+			机房位置 : {{Itroom_name}}
+			
+		</div>
+		<div style="width:19%;float:left;min-height: 30px;margin-left:2%">
+			机柜位置 : {{Itroot_cabinet}}
+			
+		</div>
+		<div style="width:19%;float:left;min-height: 30px;margin-left:2%">
+			U数 : {{itroot_u}}u
+			
+		</div>
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			合同号 : {{Server_contract}}
+			
+			</div>
+			<div style="width:30%;float:left;min-height: 30px;margin-left:2%" class="control-group">
+			使用人 : {{Username}}
+			{%if regist == 1%}<span style="color:red;">(末注册)</span>{%endif%}
+			</div>
+			<div style="width:30%;float:left;min-height: 30px;margin-left:2%" class="control-group">
+			制单人 : {{create_username}}
+			
+		</div>
+	</div>
+	<div style="clear:both;"></div>
+</div>
+	<div class="div_width">
+		<div><h3>硬件</h3></div>
+		<div class="left">
+			服务器型号 : {{Server_model}}
+			
+		</div>
+		<div class="left">
+			CPU : {{CPU_model}}
+			
+		</div>
+		<div class="left">
+			内存 : {{Memory_num}} * {{Memory_num_size}}G = {{Memory_total}}G Hz:{{Memory_hz}}G
+			
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			硬盘数 : {{Disk_num}}
+				
+			</div>
+		<div style="width:30%;float:left;min-height: 30px;margin-left:2%">
+			硬盘大小 : {% unit_convert Disk_size %}
+			
+		</div>
+		<div style="width:30%;float:left;min-height: 30px;margin-left:2%">
+			硬盘转速 : {{Disk_rate}}
+			
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:45%;float:left;min-height: 30px;">
+			电源数量 : {{Power_num}}
+			
+		</div>
+		<div style="width:45%;float:left;min-height: 30px;margin-left:2%">
+			网口数量 : {{Network_num}}
+			
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:45%;float:left;min-height: 30px;">
+			SN号 : {{Server_sn}}
+			
+		</div>
+		<div style="width:45%;float:left;min-height: 30px;margin-left:2%">
+			快速服务代码 : {{Server_quick}}
+			
+		</div>
+		</div>
+		<div class="left">
+			BMC地址 : {{Bmc_ip}}
+			
+		</div>
+		<div class="left">
+			BMC密码 : <a href="#"><botton type="button" onclick="send()">查看</botton></a>
+			<label id="send_rs">
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+	
+	<div class="div_width" style="margin-bottom:20px;">
+		<div style="width:100%"><h3>备注</h3></div>
+		<div style="margin-left: 2%;width:96%;height:atuo;"><i class="fa fa-fw fa-pencil-square-o"></i> {{remark}}</div>
+		<div style="clear:both;"></div>
+	</div>
+	</div>
+<div style="clear:both;"></div>
+</div>
+<INPUT TYPE=hidden NAME="hide_id" id="hide_id" VALUE="{{id}}">
+
+
+</div>
+    </div>
+
+
+</li>
+			{% for history in history_list%}
+			<li>
+				<i class="fa fa-history bg-aqua"></i>
+				<div class="timeline-item">
+			            <span class="time"><i class="fa fa-clock-o"></i> {% time_con history.Asset_time %}</span>
+			
+			            <h3 class="timeline-header"><a href="#">{% day_con history.Asset_time %}</a> ...</h3>
+			            <div class="timeline-body">
+			                <div><a href="/asset/history/{{history.id}}/">查看</a></div>
+			            </div>
+			    </div>
+			</li>
+			{% endfor %}
+
+<li>
+    <i class="fa fa-clock-o bg-gray"></i>
+</li>
+
+
+
+</ul>
+<script type="text/javascript">
+	function send(){
+		var id = $("#hide_id").val();
+		$.ajax({
+			url:"/Ajax/"+id+"/asset/bmcmail/",
+			type:"POST",
+			success:function(arg){
+				console.log(arg)
+				if(arg == 0){
+					$("#send_rs").html('<img src="/static/img/error.jpg" style="width: 25px;margin-top: 12px;">');
+				}else{
+					$("#send_rs").html('<img src="/static/img/right.jpg" style="width: 25px;margin-left: 25px;">邮件已发送，请查收。');
+				}
+				
+			}
+			
+		})
+		
+	}
+</script>
+{% endblock %}

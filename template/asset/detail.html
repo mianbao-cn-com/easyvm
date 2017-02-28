@@ -1,0 +1,181 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+<style>
+#asset_add {margin-left: -5px;width:1100px;border: 1px solid #b4cef8;margin-bottom:30px;background: #ffffff;font-family: font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;}
+.div_width {width:100%;}
+.left {width:48%;float:left;display:block;min-height: 30px;margin-left:2%}
+.asset_input {width:95%}
+.asset_input input:hover{border:1px solid #red; color:#0C0;}
+.asset_input input:focus{border:1px solid #fe6102; color:#0C0;}
+#asset_add h3 {border-bottom: 1px solid #eee;padding-bottom: 5px;margin: 15px 1% 20px 2% !important;font-weight: 300;font-size: 24.5px;line-height: 40px;}
+#selectError2_chzn {width:165px;}
+#asset_add label {line-height:35px;font-weight:normal;}
+</style>
+{% if action == 'history' %}
+	<div><a href="/asset/detail/{{now_id}}/">查看</a></div>
+{% endif %}
+<div id="asset_add">
+	<div>
+	<div class="div_width">
+		<div><h3>资产信息</h3>
+		<div style="float: right;margin-top: -45px;margin-right:15px;">{% date_con Asset_time %}</div>
+		</div>
+		<div class="left">
+			<label>资产编号 : {{Asset_num}}</label>
+		</div>
+		<div class="left">
+			<label>IP地址 : {{Ip_address}}</label>
+		</div>
+		<div class="left">
+			<label>系统版本 : {{System_version}}</label>
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			<label>服务器类型 : {{Type}}</label>
+			</div>
+			<div style="width:30%;float:left;min-height: 30px;margin-left:17%">
+			<label>服务器U数 : {{itroot_server_u}}U</label>
+			<label></label>
+			</div>
+		</div>
+		<div class="left">
+		<div style="width:30%;float:left;min-height: 30px;">
+			<label>供应商 : {{Server_firm}}</label>
+			<label></label>
+		</div>
+		<div style="width:25%;float:left;min-height: 30px;margin-left:2%">
+			<label>机房位置 : {{Itroom_name}}</label>
+			<label></label>
+		</div>
+		<div style="width:19%;float:left;min-height: 30px;margin-left:2%">
+			<label>机柜位置 : {{Itroot_cabinet}}</label>
+			<label></label>
+		</div>
+		<div style="width:19%;float:left;min-height: 30px;margin-left:2%">
+			<label>U数 : {{itroot_u}}u</label>
+			<label></label>
+		</div>
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			<label>合同号 : {{Server_contract}}</label>
+			<label></label>
+			</div>
+			<div style="width:30%;float:left;min-height: 30px;margin-left:2%" class="control-group">
+			<label>使用人 : {{Username}}</label>
+			<label>{%if regist == 1%}<span style="color:red;">(末注册)</span>{%endif%}</label>
+			</div>
+			<div style="width:30%;float:left;min-height: 30px;margin-left:2%" class="control-group">
+			<label>制单人 : {{create_username}}</label>
+			<label></label>
+		</div>
+	</div>
+	<div style="clear:both;"></div>
+</div>
+	<div class="div_width">
+		<div><h3>硬件</h3></div>
+		<div class="left">
+			<label>服务器型号 : {{Server_model}}</label>
+			<label></label>
+		</div>
+		<div class="left">
+			<label>CPU : {{CPU_model}}</label>
+			<label></label>
+		</div>
+		<div class="left">
+			<label>内存 : {{Memory_num}} * {{Memory_num_size}}G = {{Memory_total}}G Hz:{{Memory_hz}}G</label>
+			<label></label>
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			<label>硬盘数 : {{Disk_num}}</label>
+				<label></label>
+			</div>
+		<div style="width:30%;float:left;min-height: 30px;margin-left:2%">
+			<label>硬盘大小 : {% unit_convert Disk_size %}</label>
+			<label></label>
+		</div>
+		<div style="width:30%;float:left;min-height: 30px;margin-left:2%">
+			<label>硬盘转速 : {{Disk_rate}}</label>
+			<label></label>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:45%;float:left;min-height: 30px;">
+			<label>电源数量 : {{Power_num}}</label>
+			<label></label>
+		</div>
+		<div style="width:45%;float:left;min-height: 30px;margin-left:2%">
+			<label>网口数量 : {{Network_num}}</label>
+			<label></label>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:45%;float:left;min-height: 30px;">
+			<label>SN号 : {{Server_sn}}</label>
+			<label></label>
+		</div>
+		<div style="width:45%;float:left;min-height: 30px;margin-left:2%">
+			<label>快速服务代码 : {{Server_quick}}</label>
+			<label></label>
+		</div>
+		</div>
+		<div class="left">
+			<label>BMC地址 : {{Bmc_ip}}</label>
+			<label></label>
+		</div>
+		<div class="left">
+			<label>BMC密码 : <a href="#"><botton type="button" onclick="send()">查看</botton></a></label>
+			<label id="send_rs"></label>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+	
+	<div class="div_width" style="margin-bottom:20px;">
+		<div style="width:100%"><h3>备注</h3></div>
+		<div style="margin-left: 2%;width:96%;height:atuo;"><i class="fa fa-fw fa-pencil-square-o"></i> {{remark}}</div>
+		<div style="clear:both;"></div>
+	</div>
+	
+	<div class="div_width" style="margin-bottom:20px;">
+		<div style="width:100%"><h3>历史数据</h3></div>
+		{% if history_lens%}
+			{% for history in history_list%}
+		<div style="margin-left: 2%;width:96%;height:atuo;line-height:30px;"><i class="fa fa-fw fa-history"></i></i><span>此服务器在 {% date_con history.Asset_time %}进行了更新----------------- <a href="/asset/history/{{history.id}}/">查看</a></span></div>
+			{% endfor %}
+		{% else %}
+		<div style="margin-left: 2%;width:96%;height:atuo;line-height:30px;"><i class="fa fa-fw fa-check-circle"></i></i><span>此条资产暂无修改记录......</span></div>
+		{% endif %}
+		<div style="clear:both;"></div>
+	</div>
+	
+	</div>
+<div style="clear:both;"></div>
+</div>
+<INPUT TYPE=hidden NAME="hide_id" id="hide_id" VALUE="{{id}}">
+
+<script type="text/javascript">
+	function send(){
+		var id = $("#hide_id").val();
+		$.ajax({
+			url:"/Ajax/"+id+"/asset/bmcmail/",
+			type:"POST",
+			success:function(arg){
+				console.log(arg)
+				if(arg == 0){
+					$("#send_rs").html('<img src="/static/img/error.jpg" style="width: 25px;margin-top: 12px;">');
+				}else{
+					$("#send_rs").html('<img src="/static/img/right.jpg" style="width: 25px;margin-left: 25px;">邮件已发送，请查收。');
+				}
+				
+			}
+			
+		})
+		
+	}
+</script>
+{% endblock %}

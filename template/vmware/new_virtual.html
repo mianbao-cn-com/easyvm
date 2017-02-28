@@ -1,0 +1,55 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<link rel="stylesheet" type="text/css" href="/static/css/main.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+
+{% if bulletins %}
+<div style="margin-top: 10px;margin-bottom: -10px;width: 97%;border: none;font-size: 16px;background: rgb(255, 255, 255);overflow: hidden;height: auto;position: relative;">
+<div class="bn-title" style="color: rgb(255, 255, 255); font-weight: normal; width: auto; padding: 10px 20px; background: rgb(90, 166, 40);display: inline-block;      float: left;">公告</div><div style="float:left;color:red;line-height:42px;height:42px;margin-left:10px;">
+	{% autoescape off %}
+	{% for bulletin in bulletins %}
+		{{bulletin.content}}
+	{% endfor %}
+	{% endautoescape %}
+	
+</div>
+</div>
+{% endif %}
+
+
+<div id="main">
+   	<div class="demo" id="pricePlans">
+		<ul id="plans">
+		{% if type %}
+			{% for x in type %}
+			<li class="plan">
+				<ul class="planContainer">
+					<li class="title"><h2>{{x.type_name}}型</h2></li>
+					<li class="price"><p>{{x.application}}</p></li>
+					<li>
+						<ul class="options">
+							<li>CPU: {{ x.template.Core}} <span>vCpu</span></li>
+							<li>内存: {% UnitConvert x.template.memory 2 %} <span></span></li>
+							<li>网卡: {% GetNetworkFromId x.template.id %}张</li>
+							<li>硬盘: {% GetTemplateFromId x.template.id %} </li>
+							<li>系统: {{ x.template.systemversion}}</li>
+						</ul>
+					</li>
+					<li class="button"><a href="/vMware/order/{{x.type_name}}">点击开通</a></li>
+				</ul>
+			</li>
+			{% endfor %}
+		{% else %}
+			<li>暂无配置</li>
+		{% endif %}
+		</ul> 
+	</div>
+</div>
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,263 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<style>
+ #top_control a {width:80px;float:right;margin-right: 10px;margin-top: 0px;color:#3c8dbc;}
+ #top_control a 
+ </style>
+ 
+  {% if permission.group_list%}
+ <div style="margin-bottom: 15px;margin-top: -45px;" id="top_control">
+<a data-toggle="modal" data-target="#myModal" class="btn btn-block btn-default btn-flat">新增IP段</a>
+
+<div style="clear:both"></div>
+</div>
+   {% endif %}
+   
+   
+   
+
+<style>
+#task table td {line-height:50px;}
+</style>
+
+<!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+
+<div class="box" style="border-top: 0px;">
+  <div class="box-header">
+    
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body" id="task">
+    <table id="example1" class="table table-bordered table-striped">
+      <thead>
+      <tr>
+      	<th>别名</th>
+        <th>IP范围</th>
+        <th>已分配</th>
+        <th>Vlan</th>
+        <th>掩码</th>
+        <th>网关</th>
+        <th>DNS1</th>
+        <th>DNS2</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for pool in ippools %}
+      <tr>
+        <td>{{pool.alia}}</td>
+        <td>{{pool.pooladd}}.{{pool.start}}--{{pool.end}}</td>
+        <td>{{pool.pooladd}}.</td>
+        <td>{{pool.vlan}}</td>
+        <td>{{pool.netmask}}</td>
+        <td>{{pool.gateway}}</td>
+        <td>{{pool.dns1}}</td>
+        <td>{{pool.dns2}}</td>
+        
+		<td class="center" >
+			<a class="btn btn-success" href="/vMware/ippool/detail/{{pool.id}}/">
+				<i class="halflings-icon white fa fa-fw fa-reorder"></i>  
+			</a>
+			<a class="btn btn-info" href="/vMware/ippool/edit/{{pool.id}}/">
+				<i class="halflings-icon white fa fa-fw fa-edit"></i>
+			</a>
+			<a class="btn btn-danger" href="/vMware/ippool/del/{{pool.id}}/">
+				<i class="halflings-icon white fa fa-fw fa-trash"></i>
+			</a>
+		</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
+
+
+<div class="modal fade" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content" style="margin-top: 100px;">
+            <form action="" method="post" >
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                 
+                <h4 class="modal-title">新增IP地址池</h4>
+              </div>
+              <div class="modal-body">
+               
+                
+			<label>IP地址池</label>
+			<input type="text" class="form-control" required="required" id="pooladd" name="pooladd" placeholder="格式：10.10.10.10-20">
+			
+			<label>vlan</label>
+			<input type="text" class="form-control" required="required" id="vlan" name="vlan" placeholder="1-4096">
+			
+			<label>子网掩码</label>
+			<div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-laptop"></i>
+                  </div>
+                  <input type="text" class="form-control" required="required" data-inputmask="'alias': 'ip'" data-mask id="netmask" name="netmask" >
+            </div>
+			
+			<label>网关</label>
+			<div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-laptop"></i>
+                  </div>
+                  <input type="text" class="form-control" required="required" data-inputmask="'alias': 'ip'" data-mask id="gateway" name="gateway" >
+            </div>
+            
+            <label>DNS1</label>
+			<div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-laptop"></i>
+                  </div>
+                  <input type="text" class="form-control" required="required" data-inputmask="'alias': 'ip'" data-mask id="dns1" name="dns1" >
+            </div>
+            
+            <label>DNS2</label>
+			<div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-laptop"></i>
+                  </div>
+                  <input type="text" class="form-control" required="required" data-inputmask="'alias': 'ip'" data-mask id="dns2" name="dns2" >
+            </div>
+			
+			<label>别名</label>
+			<input type="text" class="form-control" id="alia" name="alia" placeholder="1-4096">
+            
+            <label>备注</label>
+            <textarea name="remark" id="remark" style="width:100%;height:150px;" placeholder="备注让生活变的更精彩.....">{{remark}}</textarea>
+			
+              </div>
+              
+              <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">确定</button>
+            </div>
+            </form>
+              </div>
+          </div>
+          
+</div>
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+
+
+
+<!-- Select2 -->
+<script src="/static/plugins/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="/static/js/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- Page script -->
+
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Datemask dd/mm/yyyy
+    $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //Datemask2 mm/dd/yyyy
+    $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+    //Money Euro
+    $("[data-mask]").inputmask();
+
+    //Date range picker
+    $('#reservation').daterangepicker();
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue'
+    });
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass: 'iradio_flat-green'
+    });
+
+    //Colorpicker
+    $(".my-colorpicker1").colorpicker();
+    //color picker with addon
+    $(".my-colorpicker2").colorpicker();
+
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+  });
+</script>
+
+
+
+
+
+
+
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+
+{% endblock %}

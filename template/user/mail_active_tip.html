@@ -1,0 +1,23 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<div class="box box-info" style="width:75%">
+	<div class="box-header with-border">
+	  <h3 class="box-title">激活邮件</h3>
+	</div><!-- /.box-header -->
+	<!-- form start -->
+	<form class="form-horizontal" method="post">
+	<div class="box-body" style="margin-top: 30px;height: 80px;">
+	<div style="float:left;margin-top: 7px;">请至邮箱查收激活邮件，并点击链接进行激活。如未收到激活邮件，请点击如下按钮重新发送：</div>
+	<div style="float:left;"><button type="submit" class="btn btn-info pull-right">重新发送</button></div>
+	<div style="clear:both"></div>
+	<div style="color: red;margin-top: 10px;">{{message}}</div>
+	</div>
+	 <div class="box-footer" style="height:40px;">
+
+	  </div><!-- /.box-footer -->
+	   </form>
+	</div><!-- /.box -->
+
+{% endblock %}

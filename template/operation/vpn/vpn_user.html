@@ -1,0 +1,95 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+
+<style>
+#vpnuser table td {line-height:35px;}
+</style>
+
+<div class="box" id="vpnuser">
+  <div class="box-header">
+    <h3 class="box-title">用户管理</h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table id="example1" class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th>用户名</th>
+        <th>邮箱地址</th>
+        <th>申请时间</th>
+        <th>密码状态</th>
+        <th>状态</th>
+        <th>操作 </th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for x in user_all %}
+      <tr>
+        <td class="center"><i class="fa fa-fw fa-user"></i>{{x.name}}</td>
+        <td class="center"><i class="fa fa-fw fa-user"></i>{% make_mail x.name %}</td>
+        <td>{% date_con x.time %}</td>
+        <td>
+        	{% if x.status == 0 %}<span class="label label-success">正常</span>{% endif %}
+        	{% if x.status > 0 %}<span class="label label-danger">待修改</span>{% endif %}
+        </td>
+        
+        <td class="center">
+		{% if  x.active == 0 %}
+			<span class="label" style="background-color: #B4B8B6 !important;">禁用用户</span>
+		{% endif %}
+		{% if x.active == 1 %}
+			<span class="label label-success">正常用户</span>
+		{% endif %}
+        </td>
+        
+        <td class="center">
+        	{% if power == 1%}
+        	<a class="btn btn-danger" href="/operation/vpn/manageupdatepasswd/{{x.id}}/">
+				<i class="halflings-icon white fa fa-fw fa-history"></i> 
+			</a>
+        	{% endif %}
+			<a class="btn btn-success" href="/operation/vpn/m_user/{{x.id}}/0/">禁用  </a>
+			<a class="btn btn-info" href="/operation/vpn/m_user/{{x.id}}/1/">启用 </a>
+			{% if power == 1%}	
+			<a class="btn btn-danger" href="/operation/vpn/userdel/{{x.id}}/">删除</a>
+			{% endif %}
+		</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+      <tr><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- page script -->
+
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

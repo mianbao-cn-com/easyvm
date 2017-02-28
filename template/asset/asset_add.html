@@ -1,0 +1,504 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+
+<style>
+#asset_add {margin-left: -5px;width:1100px;border: 1px solid #b4cef8;margin-bottom:30px;background: #ffffff;}
+.div_width {width:100%;}
+.left {width:48%;float:left;display:block;min-height: 30px;margin-left:2%}
+.asset_input {width:95%}
+.asset_input input:hover{border:1px solid #red; color:#0C0;}
+.asset_input input:focus{border:1px solid #fe6102; color:#0C0;}
+#asset_add h3 {border-bottom: 1px solid #eee;padding-bottom: 5px;margin: 15px 1% 20px 2% !important;font-weight: 300;font-size: 24.5px;line-height: 40px;}
+#selectError2_chzn {width:165px;}
+#asset_add input{transition:all 0.30s ease-in-out;-webkit-transition: all 0.30s ease-in-out;-moz-transition: all 0.30s ease-in-out;border-radius:3px;outline:none;}
+#asset_add input:focus{box-shadow:0 0 5px rgba(81, 203, 238, 1);-webkit-box-shadow:0 0 5px rgba(81, 203, 238, 1);-moz-box-shadow:0 0 5px rgba(81, 203, 238, 1);}
+#asset_add label{height:25px;line-height:25px;margin-top:10px;}
+</style>
+<script type="text/javascript">
+	function Change(){
+		var itroom_values = $("#Itroom_name").val();
+		$.ajax({
+			url:"/Ajax/"+itroom_values+"/asset/itroomtocab/",
+			type:"POST",
+			success:function(arg){
+				var arg = JSON.parse(arg)
+				$("#Itroot_cabinet option").each(function(){
+					$(this).remove();
+				});
+				for(x in arg){
+					$("<option value='"+x+"'>"+x+"</option>").appendTo($("#Itroot_cabinet"));
+				}
+				//cabinet.options.add(new Option("1","2"))
+			}
+			
+		})
+		
+	}
+	function Change2(){
+		var itroom_values = $("#Itroot_cabinet").val();
+		var itroom_id = $("#Itroom_name").val();
+		$.ajax({
+			url:"/Ajax/"+itroom_values+"/asset/cabtou/"+ itroom_id +"/",
+			type:"POST",
+			success:function(arg){
+				console.log(arg)
+				var arg = JSON.parse(arg)
+				$("#itroot_u option").each(function(){
+					$(this).remove();
+				});
+				for(x in arg){
+					$("<option value='"+arg[x]+"'>"+arg[x]+"</option>").appendTo($("#itroot_u"));
+				}
+				//cabinet.options.add(new Option("1","2"))
+			}
+			
+		})
+		
+	}
+</script>
+{% if action == 'update'%}
+<script type="text/javascript">
+<!--
+$(document).ready(function(){ 
+	var itroom_values = $("#hide_itroom").val();
+	var itroom_value = $("#hide_cabinet").val();
+	var itroom_id = $("#hide_itroom").val();
+	var itroom_u = $("#hide_room_u").val();
+	$.ajax({
+		url:"/Ajax/"+itroom_values+"/asset/itroomtocab/",
+		type:"POST",
+		success:function(arg){
+			var arg = JSON.parse(arg)
+			$("#Itroot_cabinet option").each(function(){
+				$(this).remove();
+			});
+			for(x in arg){
+				if(itroom_value == x){
+					$("<option value='"+x+"' selected=\"selected\">"+x+"</option>").appendTo($("#Itroot_cabinet"));
+					$("#select2-Itroot_cabinet-container").html(x);
+				}else{
+					$("<option value='"+x+"'>"+x+"</option>").appendTo($("#Itroot_cabinet"));
+				}
+			}
+		}
+		
+	})
+		$.ajax({
+			url:"/Ajax/"+itroom_value+"/asset/cabtou/"+ itroom_id +"/",
+			type:"POST",
+			success:function(arg){
+				console.log(arg)
+				var arg = JSON.parse(arg)
+				$("#itroot_u option").each(function(){
+					$(this).remove();
+				});
+				$("<option value='"+itroom_u+"' selected=\"selected\">"+itroom_u+"</option>").appendTo($("#itroot_u"));
+				for(x in arg){
+					$("<option value='"+arg[x]+"'>"+arg[x]+"</option>").appendTo($("#itroot_u"));
+				}
+				$("#select2-itroot_u-container").html(itroom_u);
+				//cabinet.options.add(new Option("1","2"))
+			}
+			
+		})
+	}); 
+//-->
+</script>
+{% else %}
+<script type="text/javascript">
+function value_check(){
+	var a = $("#Asset_num").val()
+	if(a != 'IT-S-'){
+		$.ajax({
+			url:"/Ajax/"+ a +"/asset/valuecheck/",
+			type:"POST",
+			success:function(arg){
+				if(arg == 0){
+					$("#check_rs").html('<img src="/static/img/error.jpg" style="width: 25px;margin-top: 10px;">');
+				}else{
+					$("#check_rs").html('<img src="/static/img/right.jpg" style="width: 25px;margin-top: 12px;">');
+					$("#asset_submit").removeAttr("disabled");
+				}
+			}
+		})
+	}else{
+		var or_have = $("#asset_submit").prop("disabled");
+		console.log(or_have)
+		if(or_have == false){
+			$("#asset_submit").attr("disabled","true");
+		}
+		$("#check_rs img").remove();
+		$("#check_rs").html('<img src="/static/img/error.jpg" style="width: 25px;margin-top: 10px;">');
+	}
+}
+</script>
+{% endif %}
+<div id="asset_add">
+	<form action="{{url}}" method="post" >
+	<div>
+	<div class="div_width">
+		<div><h3>资产信息</h3>
+			<button type="submit" class="btn btn-primary" style="float: right;margin-top: -65px;margin-right:10px;" id="asset_submit">确定添加</button>
+			{% if action == 'update'%}
+				<INPUT TYPE=hidden NAME="hide_id" VALUE="{{id}}">
+				<INPUT TYPE=hidden NAME="hide_history" VALUE="{{history_id}}">
+				<INPUT TYPE=hidden NAME="old_create" VALUE="{{create_user}}">
+				<INPUT TYPE=hidden NAME="hide_itroom" id="hide_itroom" VALUE="{{room_id}}">
+				<INPUT TYPE=hidden NAME="hide_cabinet" id="hide_cabinet" VALUE="{{Itroot_cabinet}}">
+				<INPUT TYPE=hidden NAME="hide_room_u" id="hide_room_u" VALUE="{{itroot_u}}">
+				<INPUT TYPE=hidden NAME="Asset_num" id="Asset_num" VALUE="{{Asset_num}}">
+			{% endif %}
+		</div>
+		<div class="left">
+			<label>资产编号</label>
+			{% if action == 'update'%}
+			<input type="text" id="" name="" class="form-control" value="{{Asset_num}}" class="form-control" disabled>
+			{% else %}
+			<input type="text" id="Asset_num" name="Asset_num" class="form-control" value="{{Asset_num}}" onblur="value_check(this);">
+			<label id="check_rs" style="height: 35px;width: 30px;float: right;margin-top: -40px;"></label>
+			{% endif %}
+		</div>
+		<div class="left">
+			<label>IP地址</label>
+			<div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-laptop"></i>
+                  </div>
+                  <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask id="Ip_address" name="Ip_address" value="{{Ip_address}}" style="width:98%">
+            </div>
+		</div>
+		<div class="left">
+			<label>系统版本</label>
+			<select id="System_version" name="System_version" style="width: 100%;" class="form-control select2">
+			{{System_version}}
+				{% for sy in sys %}
+				<option value="{{sy.system_version}}" {% select_check sy.system_version System_version %}>{{sy.system_version}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			<label>服务器类型</label>
+			<select id="type" name="type" style="width: 100%;" class="form-control select2">
+				{% for x in a1%}
+					<option value="{{x}}" {% select_check x Type%}>{{x}}</option>
+				{% endfor %}
+
+			</select>
+			</div>
+			<div style="width:30%;float:left;min-height: 30px;margin-left:17%">
+			<label>服务器U数</label>
+			<select id="itroot_server_u" name="itroot_server_u" style="width: 100%;" class="form-control select2">
+				{% for z in a2 %}
+					<option value="{{z}}" {% select_check z itroot_server_u%}>{{z}}U</option>
+				{% endfor%}
+			</select>
+			</div>
+		</div>
+		<div class="left">
+		<div style="width:31%;float:left;min-height: 30px;">
+			<label>供应商</label>
+			<select id="Server_firm" name="Server_firm" style="width: 100%;" class="form-control select2">
+				{% for firm in firms %}
+				<option value="{{firm.id}}" {% select_check firm.Server_firm Server_firm %}>{{firm.Server_firm}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:25%;float:left;min-height: 30px;margin-left:2%">
+			<label>机房位置</label>
+			<select onchange="Change()" id="Itroom_name" name="Itroom_name" style="width: 100%;" class="form-control select2">
+				<option>选择机房</option>
+				{% for cabinet1 in cabinets%}
+				<option value="{{cabinet1.id}}" {% select_check cabinet1.Itroom_name Itroom_name %}>{{cabinet1.Itroom_name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:19%;float:left;min-height: 30px;margin-left:2%">
+			<label>机柜位置</label>
+			<select onchange="Change2()" id="Itroot_cabinet" name="Itroot_cabinet" style="width: 95%;" class="form-control select2">
+				<option >选择机柜</option>
+			</select>
+		</div>
+		<div style="width:19%;float:left;min-height: 30px;margin-left:2%">
+			<label>U数</label>
+			<select id="itroot_u" name="itroot_u" style="width: 95%;" class="form-control select2">
+				<option>上架U数</option>
+			</select>
+		</div>
+		</div>
+		<div class="left">
+			<div style="width:45%;float:left;min-height: 30px;">
+			<label>合同号</label>
+			<select id="Server_contract" name="Server_contract" style="width: 100%;" class="form-control select2">
+				{% for c in a3 %}
+					<option value="{{c}}" {% select_check c Server_contract%}>{{c}}</option>
+				{% endfor%}
+			</select>
+			</div>
+			<div style="width:45%;float:left;min-height: 30px;margin-left:2%" class="control-group">
+			<label>申请人</label>
+			<div class="control-group">
+				<div class="controls">
+					<select id="user" name="user" style="width:160px;" class="form-control select2">
+						 <option value=""></option>
+                         {% for user in users %}
+                            <option value="{{user.id}}" {% select_check user.Username Username %}>{{user.Username}}</option>
+                    	{% endfor%}
+					</select>
+				</div>
+			</div>
+		</div>
+			<a href="#" style="float: right;margin-top: -26px;margin-right: 70px;" data-toggle="modal" data-target="#myModal">新增</a>
+		</div>
+	</div>
+	
+	<div class="div_width">
+		<div style="width:100%"><h3>硬件</h3></div>
+		<div class="left">
+			<label>服务器型号</label>
+			<select id="Server_model" name="Server_model" style="width: 100%;" class="form-control select2">
+			{% for ser in server%}
+				<option value="{{ser.id}}" {% select_check ser.Server_model Server_model %} >{{ser.Server_model}}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="left">
+			<label>CPU</label>
+			<select id="Asset_cpu" name="Asset_cpu" style="width: 98%;" class="form-control select2">
+			{% for cpu in cpus%}
+				<option value="{{cpu.id}}" {%select_check cpu.id Asset_cpu %}>{{cpu.CPU_model}}----{{cpu.CPU_num}}*{{cpu.cpu_num_core}}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="left">
+			<label>内存</label>
+			<select id="Asset_memory" name="Asset_memory" style="width: 100%;" class="form-control select2">
+			{% for memory in memorys %}
+				<option value="{{memory.id}}" {% select_check memory.id Asset_memory %}>{{memory.Memory_num}}根{{memory.Memory_num_size}}G共{{memory.Memory_total}}G {{memory.Memory_hz}}Hz</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="left">
+			<div style="width:30%;float:left;min-height: 30px;">
+			<label>硬盘数</label>
+				<select id="Disk_num" name="Disk_num" style="width: 100%;" class="form-control select2">
+				{% for v in a4 %}
+					<option value="{{v}}" {% select_check v Disk_num%}>{{v}}</option>
+				{% endfor%}
+				</select>
+			</div>
+		<div style="width:32%;float:left;min-height: 30px;margin-left:2%">
+			<label>硬盘大小</label>
+			<select id="Disk_size" name="Disk_size" style="width: 100%;" class="form-control select2">
+				{% for b in a5 %}
+					<option value="{{b}}" {% select_check b Disk_size%}>{% unit_convert b%}</option>
+				{% endfor%}
+				</select>
+		</div>
+		<div style="width:32%;float:left;min-height: 30px;margin-left:2%">
+			<label>硬盘转速</label>
+		<select id="Disk_rate" name="Disk_rate" style="width: 100%;" class="form-control select2">
+				{% for n in a6 %}
+					<option value="{{n}}" {% select_check n Disk_rate%}>{{n}}K</option>
+				{% endfor%}
+				</select>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:45%;float:left;min-height: 30px;">
+			<label>电源数量</label>
+			<select id="Power_num" name="Power_num" style="width: 100%;" class="form-control select2">
+				<option value="1" {% select_check 1 Power_num %}>1个</option>
+				<option value="2" {% select_check 2 Power_num %}>2个</option>
+				<option value="3" {% select_check 3 Power_num %}>4个</option>
+			</select>
+		</div>
+		<div style="width:45%;float:left;min-height: 30px;margin-left:2%">
+			<label>网口数量</label>
+			<select id="Network_num" name="Network_num" style="width: 100%;" class="form-control select2">
+				<option value="1" {% select_check 1 Network_num %}>1个</option>
+				<option value="2" {% select_check 2 Network_num %}>2个</option>
+				<option value="3" {% select_check 3 Network_num %}>3个</option>
+				<option value="4" {% select_check 4 Network_num %}>4个</option>
+				<option value="5" {% select_check 5 Network_num %}>5个</option>
+				<option value="6" {% select_check 6 Network_num %}>6个</option>
+				<option value="8" {% select_check 8 Network_num %}>8个</option>
+				<option value="10" {% select_check 10 Network_num %}>10个</option>
+				<option value="12" {% select_check 12 Network_num %}>12个</option>
+			</select>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:45%;float:left;min-height: 30px;">
+			<label>SN号</label>
+			<input type="text" id="Server_sn" name="Server_sn" class="form-control" value="{{Server_sn}}">
+		</div>
+		<div style="width:45%;float:left;min-height: 30px;margin-left:2%">
+			<label>快速服务代码</label>
+			<input type="text" id="Server_quick" name="Server_quick" class="form-control" value="{{Server_quick}}">
+		</div>
+		</div>
+		<div class="left">
+			<label>BMC地址</label>
+			
+			<div class="input-group">
+                  <div class="input-group-addon">
+                    <i class="fa fa-laptop"></i>
+                  </div>
+                  <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask id="Bmc_ip" name="Bmc_ip" value="{{Bmc_ip}}">
+            </div>
+		
+		</div>
+		<div class="left">
+			<label>BMC密码</label>
+			<input type="password" id="Bmc_passwd" name="Bmc_passwd" class="form-control" value="{{Bmc_passwd}}" style="width:98%">
+		</div>
+	</div>
+	
+	<div class="div_width">
+		<div style="width:100%"><h3>备注</h3></div>
+			<textarea name="remark" id="remark" style="margin-left: 2%;width:96%;height:150px;" placeholder="备注让生活变的更精彩.....">{{remark}}</textarea>
+	</div>
+	
+	</div>
+	</form>
+	
+<div style="clear:both;"></div>
+</div>
+
+<div class="modal fade" id="myModal">
+   <div class="modal-dialog">
+     <div class="modal-content" style="margin-top: 100px;">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span></button>
+         <h4 class="modal-title">新增用户信息</h4>
+       </div>
+       <div class="modal-body">
+		<input type="text" id="trunk_mail" name="trunk_mail" class="form-control" style="width:30%;" placeholder="请输入用户邮箱" >
+       	<label style="float:right;margin-right:48%;margin-top:-30px;font-size:18px;font-weight: 400;">@howbuy.com</label>
+       </div>
+       <div class="modal-footer">
+       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-primary" onclick="user_add()">保 存</button>
+     </div>
+       </div>
+   </div>
+</div>
+
+<<script type="text/javascript">
+<!--
+function user_add(){
+	var mail = $('#trunk_mail').val()
+	$.ajax({
+		url:"/Ajax/"+ mail +"/asset/useradd/",
+		type:"POST",
+		success:function(arg){
+			console.log(arg)
+			if(arg != 1){
+				$("<option value='1."+arg+"' selected=\"selected\">"+mail+"</option>").appendTo($("#user"));
+				$("#select2-user-container").html(mail);
+				$("#myModal").hide()
+				$(".modal-backdrop").remove()
+				$("body").removeClass("modal-open")
+			}else{
+				console.log(arg)
+			}
+		}
+	})
+}
+//-->
+</script>
+
+
+
+<!-- Select2 -->
+<script src="/static/plugins/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="/static/js/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- Page script -->
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Datemask dd/mm/yyyy
+    $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //Datemask2 mm/dd/yyyy
+    $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+    //Money Euro
+    $("[data-mask]").inputmask();
+
+    //Date range picker
+    $('#reservation').daterangepicker();
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue'
+    });
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass: 'iradio_flat-green'
+    });
+
+    //Colorpicker
+    $(".my-colorpicker1").colorpicker();
+    //color picker with addon
+    $(".my-colorpicker2").colorpicker();
+
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+  });
+</script>
+
+{% endblock %}

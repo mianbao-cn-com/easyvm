@@ -1,0 +1,99 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+  
+  
+  
+  
+  
+  
+  
+  
+<div class="box" style="border:0px;">
+	<div class="box-header">
+		<h3 class="box-title">vMware 虚拟机列表</h3>
+	</div>
+<!-- /.box-header -->
+	<div class="box-body">
+		<table id="example1" class="table table-bordered table-striped">
+        	<thead>
+            	<tr>
+                    <th>虚拟机名</th>
+					<th>配置</th>
+					<th>系统版本</th>
+					<th>IP地址</th>
+					<th>tools状态</th>
+					<th>状态</th>
+					<!-- <th>操作</th>-->
+                </tr>
+            </thead>
+            <tbody>
+               {% for vm in vms %}
+			  	{% if vm.type == 0 %}
+				<tr>
+					<td class="center" style="line-height: 34px;">{{ vm.name }}</td>
+					<td class="center" style="line-height: 34px;">{{ vm.Core }} Core/{% UnitConvert vm.memory 2 %}</td>
+					<td class="center" style="line-height: 34px;">{{ vm.systemversion }}</td>
+					<td class="center" style="line-height: 34px;">{% FromVmGetIP vm.id %}</td>
+					<td class="center" style="line-height: 34px;">{{ vm.vmtools }}</td>
+					<td class="center" style="line-height: 34px;">{% FromVmGetStatus vm.id %}</td>
+					<!--<td class="center" style="line-height: 34px;">
+					
+						<a class="btn btn-success" href="/vmware/list/{{item.id}}">
+							<i class="halflings-icon white fa fa-fw fa-tv"></i>  
+						</a>
+						<a class="btn btn-info" href="#">
+							<i class="halflings-icon white fa fa-fw fa-edit"></i>  
+						</a>
+						
+					</td>-->
+				</tr>
+				{% endif %}
+				{% endfor %}
+            </tbody>
+                <tfoot>
+                <tr>
+                  	<th>虚拟机名</th>
+					<th>配置</th>
+					<th>系统版本</th>
+					<th>IP地址</th>
+					<th>tools状态</th>
+					<th>状态</th>
+					<!-- <th>操作</th>-->
+                </tr>
+                </tfoot>
+        </table>
+    </div>
+<!-- /.box-body -->
+</div>
+
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}
+

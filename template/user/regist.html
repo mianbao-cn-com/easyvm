@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<head>
+<link REL="SHORTCUT ICON" HREF="/static/favicon.ico">
+<html lang="zh-CN">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>{{title}}</title>
+<link rel="stylesheet" href="/static/css/style_regist.css">
+</head>
+<body>
+
+<script type="text/javascript">
+	function Change(){
+		var register_mail = $("#mail").val();
+		if(register_mail != ''){
+			$.ajax({
+				url:"/Ajax/"+register_mail+"/user/register/",
+				type:"POST",
+				success:function(arg){
+					console.log(arg)
+					if(arg == 0){
+						$("#send_rs").html("");
+						$("#submit").removeAttr("disabled");
+						$("#submit").css("background","rgba(6, 127, 228, 0.71)");
+					}else{
+						$("#send_rs").html('* 此邮箱已申请过帐号');
+						$("#submit").attr("disabled","true");
+						$("#submit").css("background","#c2c2c2");
+					}
+				}
+				
+			})
+		}
+	}
+</script>
+
+<script type="text/javascript">
+	function confirm_pwd(){
+		var pwd = $("#password").val();
+		var conf_pwd = $("#confirm_password").val();
+		var register_mail = $("#mail").val();
+		console.log(pwd)
+		console.log(conf_pwd)
+		if(pwd == conf_pwd){
+			$("#send_pw").html("");
+		}else{
+			$("#send_pw").html('* 两次密码不匹配');
+		}
+	}
+</script>
+
+<div class="register-container">
+	<h1>一步注册，轻松运维！</h1>
+	
+	<div class="connect">
+		<p>Open Free Work!</p>
+	</div>
+	
+	<form action="/regist/" method="post" >
+		<div>
+			<input type="text" name="mail"  id="mail" placeholder="输入邮箱地址" style="width: 130px;float: left;" onblur="Change(this);"/>
+			<span style="line-height: 80px;">{{mail_add}}</span>
+			<div id="send_rs" style="color:red;margin-left: -150px;font-size: 14px;margin-top: -10px;margin-bottom: 10px;"></div>
+		</div>
+		<div style="margin-top: -25px;">
+			<input type="password" name="password" id="password" class="password" placeholder="输入密码" oncontextmenu="return false" onpaste="return false" />
+		</div>
+		<div>
+			<input type="password" name="confirm_password" id="confirm_password" class="confirm_password" placeholder="再次输入密码" onblur="confirm_pwd(this);" />
+		<div id="send_pw" style="color:red;margin-left: -190px;font-size: 14px;margin-top: 5px;margin-bottom: -7px;"></div>
+		</div>
+		<div>
+			<input type="text" name="phone"  placeholder="输入手机号码" />
+		</div>
+		
+		<div style="margin-top: 20px;">
+			<select name="group">
+			{% for department in depatrments%}
+			  <option value ="{{group_list.id}}">{{department.name}}</option>
+			 {% endfor %}
+			</select>
+		</div>
+		<button id="submit" type="submit" disabled style="background:#c2c2c2;">注 册</button>
+	</form>
+	<a href="/login/">
+		<button type="button" class="register-tis">已经有账号？</button>
+	</a>
+
+</div>
+
+</body>
+<script src="/static/js/jquery-1.9.1.min.js"></script>
+<script src="/static/js/common.js"></script>
+<!--背景图片自动更换-->
+<script src="/static/js/supersized.3.2.7.min.js"></script>
+<script src="/static/js/supersized-init.js"></script>
+<!--表单验证-->
+<script src="/static/js/jquery.validate.min.js?var1.14.0"></script>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>VPN自助管理平台</title>
+<link rel="stylesheet" href="/static/css/vpn_style.css">
+<link rel="stylesheet" href="/static/css/vpn_fort.css">
+<style>
+.top-banner {
+	background-color: #333;
+}
+.nav {
+	margin-bottom: 30px;
+}
+.nav li.current a{
+	background-color: #009DFF;
+	color: #fff;
+	padding: 10px;
+}
+.nav a {
+	margin: 5px;	
+	color: #333;
+	text-decoration: none;
+}
+</style>
+<script src="/static/js/vpn_fort.js"></script>
+</head>
+<body>
+<div class="form-wrapper">
+	<div class="top"><div class="colors"></div></div>
+	<div class="nav" style="font-size:35px;">VPN自助管理平台</div>
+	<form name="form" action="" method="Post">
+		<div class="form">
+			<div class="form-item" style="margin-top: 20px;">
+				<input type="text" name="name" id="name" required="required" placeholder="用户名" autocomplete="off">
+			</div>
+			<div class="form-item" style="margin-top: 35px;">
+				<input type="password" name="password" id="password" required="required" placeholder="密码" autocomplete="off">
+			</div>
+			<div class="button-panel" style="margin-top: 55px;">
+				{{message}}
+			</div>
+			<div class="button-panel" style="margin-top: 55px;">
+				<input type="submit" class="button" title="Sign In" value="登录">
+			</div>
+		</div>
+	</form>
+</div>
+<div class="footer-banner" style="width:728px; margin:200px auto 0"></div>
+<script>
+    solid();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+<link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+<link rel="stylesheet" href="/static/plugins/iCheck/all.css">
+<link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker-bs3.css">
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+
+<style>
+#domainlist table td {line-height:34px;}
+</style>
+
+<div class="box box-success" style="margin-top: 10px;">
+<div class="box-header"></div>
+<div class="box-body">
+<form action="" method="post" >
+	<div class="col-xs-2">
+	  <input type="text" name="host" id="host" class="form-control" placeholder="主机记录" value="{{edits.host}}" required="required">
+	</div>
+
+	<div class="col-xs-2">
+	  <div class="left" style="margin-bottom: 15px;">
+		<select id="types" name="types" style="width: 100%;" class="form-control select2">
+		<option value="{{x}}" >选择解析类型</option>
+			{% for x in types %}
+			<option value="{{x}}" {% select_check edits.types x %} >{{x}}</option>
+			{% endfor %}
+		</select>
+	  </div>
+	</div>
+	
+	<div class="col-xs-2">
+	  <div class="left" style="margin-bottom: 15px;">
+		<select id="topdomain" name="topdomain" style="width: 100%;" class="form-control select2">
+		<option value="{{x}}" >选择顶级域名</option>
+			{% for x in topdomain %}
+			<option value="{{x}}" {% select_check edits.topdomain x %} >{{x}}</option>
+			{% endfor %}
+		</select>
+	  </div>
+	</div>
+	
+	<div class="col-xs-2" style="width: 20.666667%;">
+		<div class="input-group" style="width:100%;">
+               <div class="input-group-addon">
+                 <i class="fa fa-laptop"></i>
+               </div>
+               <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask id="ip" name="ip" value="{{edits.ip}}" required="required">
+		</div>	
+	</div>
+	
+	<div class="col-xs-2">
+	  <input type="text" name="used" id="used" class="form-control" placeholder="用途" value="{{edits.used}}" required="required">
+	</div>
+	
+	<div class="col-xs-2" style="width: 6.666667%;">
+		<button class="btn btn-block btn-success" name="submit" id="submit" style="width: 80px;">{% if edit_id %}更新{% else %}申请{% endif %}</button>
+	</div>
+	<div style="clear:both"></div>
+	</div>
+</form>
+</div>
+
+<div class="box" style="border:0px;" id="domainlist">
+<div class="box-header">
+		<h3 class="box-title">域名解析</h3>
+	</div>
+<!-- /.box-header -->
+	<div class="box-body">
+		<table id="example1" class="table table-bordered table-striped">
+        	<thead>
+            	<tr>
+                    <th>主机记录</th>
+					<th>解析类型</th>
+					<th>顶级域名</th>
+					<th>解析地址</th>
+					<th>用途</th>
+					<th>申请时间</th>
+					<th>状态</th>
+					<th>原因</th>
+					<th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+               {% for item in hosts %}
+				<tr>
+					<td class="center" >{{ item.host }}</a></td>
+					<td class="center" >{{ item.types }}</td>
+					<td class="center" >{{ item.topdomain }}</td>
+					<td class="center" >{{ item.ip }}</td>
+					<td class="center" >{{ item.used }}</td>
+					<td class="center" >{% date_con item.ctime %}</td>
+					<td class="center" >{% DomainStatusConvert item.status %}</td>
+					<td class="center" >{%if item.remark %}{{item.remark}}{%else%}--{% endif %}</td>
+					<td class="center" >
+					{% if item.status == 1 %}
+					已完成
+					{% else %}
+					{% if edit_id == item.id %}
+					修改中....
+					{% else %}
+					<a class="btn btn-success" href="/operation/domain/edit/{{item.id}}">
+							<i class="halflings-icon white fa fa-fw fa-edit"></i>
+						</a>
+					<a class="btn btn-danger" href="/operation/domain/del/{{item.id}}">
+							<i class="halflings-icon white fa fa-fw fa-trash"></i>
+						</a>
+						
+					{% endif %}
+					
+					{% endif%}
+					</td>
+				</tr>
+				{% endfor %}
+            </tbody>
+        </table>
+    </div>
+<!-- /.box-body -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Select2 -->
+<script src="/static/plugins/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="/static/js/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- Page script -->
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Datemask dd/mm/yyyy
+    $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //Datemask2 mm/dd/yyyy
+    $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+    //Money Euro
+    $("[data-mask]").inputmask();
+
+    //Date range picker
+    $('#reservation').daterangepicker();
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue'
+    });
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass: 'iradio_flat-green'
+    });
+
+    //Colorpicker
+    $(".my-colorpicker1").colorpicker();
+    //color picker with addon
+    $(".my-colorpicker2").colorpicker();
+
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+  });
+</script>
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

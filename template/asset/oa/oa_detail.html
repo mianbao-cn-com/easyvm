@@ -1,0 +1,135 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+<style>
+#asset_add {margin-left: -5px;width:1100px;border: 1px solid #b4cef8;margin-bottom:30px;background: #ffffff;font-family: font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;}
+.div_width {width:100%;}
+.left {width:48%;float:left;display:block;min-height: 30px;margin-left:2%}
+.asset_input {width:95%}
+.asset_input input:hover{border:1px solid #red; color:#0C0;}
+.asset_input input:focus{border:1px solid #fe6102; color:#0C0;}
+#asset_add h3 {border-bottom: 1px solid #eee;padding-bottom: 5px;margin: 15px 1% 20px 2% !important;font-weight: 300;font-size: 24.5px;line-height: 40px;}
+#selectError2_chzn {width:165px;}
+#asset_add label {line-height:35px;font-weight:normal;}
+</style>
+{% if action == 'history' %}
+	<div><a href="/asset/detail/{{now_id}}/">查看</a></div>
+{% endif %}
+<div id="asset_add">
+	<div>
+	<div class="div_width">
+		<div><h3>资产信息</h3>
+		<div style="float: right;margin-top: -45px;margin-right:15px;">{% date_con now_oa.Ctime %}</div>
+		</div>
+		<div class="left">
+			<label>资产编号 : {{now_oa.num}}</label>
+		</div>
+		
+		
+		
+		
+		<div class="left">
+		<div style="width:30%;float:left;min-height: 30px;">
+			<label>类型:{% Get_OA_Type now_oa.Type %}</label>
+			
+		</div>
+		<div style="width:32%;float:left;min-height: 30px;margin-left:2%">
+			<label>品牌:{% Get_OA_Brands now_oa.Brands %}</label>
+		</div>
+		<div style="width:32%;float:left;min-height: 30px;margin-left:2%">
+			<label>型号:{% Get_OA_Model now_oa.Model%}</label>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>供应商:{% Get_OA_supplier now_oa.Supplier %}</label>
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:4%">
+			<label>购买日期:{{now_oa.Buy_time}}</label>
+		</div>
+		</div>
+		
+		
+		<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>价格:{{now_oa.Pice}} ￥</label>
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:2%">
+			<label>质保时间:{% Get_OA_warranty now_oa.Warranty %}年</label>
+		</div>
+	</div>
+	
+	<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>用户:{% user_info_float_id now_oa.User %}</label>
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:4%">
+			<label>部门:{% Get_OA_department now_oa.Department %}</label>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>地点:{% Get_OA_address now_oa.Address %}</label>
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:2%">
+			
+		</div>
+		</div>
+	<div style="clear:both;"></div>
+</div>
+	<div class="div_width">
+		<div><h3>硬件</h3></div>
+		<div class="left">
+			<label>配置:{% Get_OA_confs now_oa.Conf %}</label>
+			
+		</div>
+		
+		<div class="left">
+		<label>显示器尺寸:{% Get_OA_monitor now_oa.Monitor_size %} 寸</label>
+		</div>
+		
+		<div class="left">
+			<label>SN号:{{ now_oa.SN}}</label>
+		</div>
+		
+		<div class="left" >
+		<div style="width:98%;">
+		<label>快速服务代码:{{ now_oa.QSN }}</label>
+			
+			</div>
+		</div>
+		
+		
+		
+		
+		
+		<div style="clear:both;"></div>
+	</div>
+	
+	<div class="div_width" style="margin-bottom:20px;">
+		<div style="width:100%"><h3>备注</h3></div>
+		<div style="margin-left: 2%;width:96%;height:atuo;"><i class="fa fa-fw fa-pencil-square-o"></i> {{now_oa.Remark}}</div>
+		<div style="clear:both;"></div>
+	</div>
+	
+	<div class="div_width" style="margin-bottom:20px;">
+		<div style="width:100%"><h3>历史数据</h3></div>
+		{% if history_num > 0 %}
+			{% for history in historys%}
+		<div style="margin-left: 2%;width:96%;height:atuo;line-height:30px;"><i class="fa fa-fw fa-history"></i></i><span>此服务器在 {% date_con history.Ctime %}进行了更新----------------- <a href="/asset/oa/history/{{history.id}}/">查看</a></span></div>
+			{% endfor %}
+		{% else %}
+		<div style="margin-left: 2%;width:96%;height:atuo;line-height:30px;"><i class="fa fa-fw fa-check-circle"></i></i><span>此条资产暂无修改记录......</span></div>
+		{% endif %}
+		<div style="clear:both;"></div>
+	</div>
+	
+	</div>
+<div style="clear:both;"></div>
+</div>
+<INPUT TYPE=hidden NAME="hide_id" id="hide_id" VALUE="{{id}}">
+
+{% endblock %}

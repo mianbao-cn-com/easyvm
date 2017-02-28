@@ -1,0 +1,77 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+  
+<div class="box" style="border:0px;">
+	<div class="box-header">
+		<h3 class="box-title">任务进度</h3>
+	</div>
+<!-- /.box-header -->
+	<div class="box-body">
+		<table id="example1" class="table table-bordered table-striped">
+        	<thead>
+            	<tr>
+                    <th>项目</th>
+					<th>模板</th>
+					<th>数量</th>
+					<th>配置</th>
+					<th>资源域</th>
+					<th>申请时间</th>
+					<th>结束日期</th>
+					<th>进度</th>
+					<th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+               {% for item in user_task %}
+				<tr>
+					<td class="center" style="line-height: 34px;"><a href="/vmware/task/detial/{{item.id}}">{{ item.remark }}</a></td>
+					<td class="center" style="line-height: 34px;">{% from_vmid_get_vmname item.template_name %}</td>
+					<td class="center" style="line-height: 34px;">{{ item.num }}台</td>
+					<td class="center" style="line-height: 34px;">{% vmid_configure item.template_name %}</td>
+					<td class="center" style="line-height: 34px;">{% get_env item.where %}</td>
+					<td class="center" style="line-height: 34px;">{% date_con item.create_time %}</td>
+					<td class="center" style="line-height: 34px;">{% day_con item.powoff_time %}</td>
+					<td class="center" style="line-height: 34px;">{% get_order_status_china item.status %}</td>
+					<td class="center" style="line-height: 34px;">
+						<a class="btn btn-success" href="/vmware/task/detial/{{item.id}}">
+							<i class="halflings-icon white fa fa-fw  fa-bars"></i>  
+						</a>
+					</td>
+				</tr>
+				{% endfor %}
+            </tbody>
+        </table>
+    </div>
+<!-- /.box-body -->
+</div>
+
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

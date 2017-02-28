@@ -1,0 +1,84 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">虚拟机类型</h3>
+
+              <div class="box-tools">
+                <div class="input-group input-group-sm">
+                    <a class="btn btn-success" href="/vMware/virtual_type/add/">新增</a>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>型号</th>
+                  <th>模板名称</th>
+                  <th>推荐用途</th>
+                  <th>系统型号</th>
+                  <th>CPU</th>
+                  <th>内存</th>
+                  <th>硬盘</th>
+                  <th>网络</th>
+                  <th>操作</th>
+                </tr>
+                {% if types %}
+                {% for x in types %}
+                <tr>
+                  <td>{% Stringlowtoup x.type_name %}</td>
+                  <td>{{ x.template.name}}</td>
+                  <td>{{x.application}}</td>
+                  <td>{{ x.template.systemversion}}</td>
+                  <td>{{ x.template.Core}}</td>
+                  <td>{{ x.template.memory}}</td>
+                  <td>{% GetTemplateFromId x.template.id %}</td>
+                  <td>{% GetNetworkFromId x.template.id %}</td>
+                   <td>
+                  	{% if x.status == 0 %}
+                  		<span class="label label-success">启用状态</span>
+                  	{% else %}
+                  		<span class="label label-danger">禁用状态</span>
+                  	{% endif %}
+                  </td>
+                  <td>
+                  <a class="btn btn-success" {% if x.status == 0 %}href="/vMware/virtual_type/disable/{{x.id}}/"{% else %}href="/vMware/virtual_type/enable/{{x.id}}"{% endif %}>
+					<i class="halflings-icon white">
+						{% if x.status == 0 %}禁用{% else %}启用{% endif %}
+					</i>
+				  </a>
+                  
+					<a class="btn btn-danger" href="/vMware/virtual_type/del/{{x.id}}">
+					<i class="halflings-icon white fa fa-fw fa-trash"></i> 
+					</a>
+					
+                  </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td>暂无</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                {% endif %}
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+
+
+{% endblock %}

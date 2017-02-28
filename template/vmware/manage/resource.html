@@ -1,0 +1,228 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+
+<link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+<link rel="stylesheet" href="/static/plugins/iCheck/all.css">
+<link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker-bs3.css">
+
+<script type="text/javascript">
+	function Change(){
+		var node = $("#vc").val();
+		$.ajax({
+			url:"/vMware/Ajax/"+node+"/vcnode/",
+			type:"POST",
+			success:function(arg){
+				var arg = JSON.parse(arg)
+				$("#node").empty();
+				$("<option>请选择节点</option>").appendTo($("#node"));
+				for(x in arg){
+					a = arg[x][2]/1024/1024/1024
+					$("<option value='"+arg[x][0]+"'>"+arg[x][1]+"</option>").appendTo($("#node"));
+				}
+			}
+		})
+	}
+</script>
+
+<script type="text/javascript">
+	function Change2(){
+		var node = $("#node").val();
+		$.ajax({
+			url:"/vMware/Ajax/"+node+"/nodedata/",
+			type:"POST",
+			success:function(arg){
+				var arg = JSON.parse(arg)
+				$("#data").empty();
+				$("<option>请选择存储位置</option>").appendTo($("#data"));
+				for(x in arg){
+					a = arg[x][2]/1024/1024/1024
+					$("<option value='"+arg[x][0]+"'>"+arg[x][1]+" &nbsp;&nbsp;可用："+a.toFixed(2)+"G</option>").appendTo($("#data"));
+				}
+			}
+		})
+	}
+</script>
+
+<style>
+#resource td {line-height:50px;}
+</style>
+<div class="box box-primary" style="width: 97%;">
+	<div style="margin:20px;">
+            <div class="box-header with-border">
+              
+            </div>
+            <!-- /.box-header -->
+            
+             <div class="box-body table-responsive no-padding" style="margin-bottom:25px;">
+              <table class="table table-hover" id="resource">
+                {% if resources %}
+                {% for x in resources %}
+                <tr>
+                  <td>{{x.name}}</td>
+                  <td>{{x.vc.host}}</td>
+                  <td>{% Resourcestatus x.type %}</td>
+                  <td>{{x.node.name}}</td>
+                  <td>{{x.data.name}}</td>
+                  <td>
+                  	{% if x.status == 0 %}
+                  		<span class="label label-success">启用状态</span>
+                  	{% else %}
+                  		<span class="label label-danger">禁用状态</span>
+                  	{% endif %}
+                  </td>
+                  <td>
+                  <a class="btn btn-success" {% if x.status == 0 %}href="/vMware/resource/disable/{{x.id}}/"{% else %}href="/vMware/resource/enable/{{x.id}}"{% endif %}>
+					<i class="halflings-icon white">
+						{% if x.status == 0 %}禁用{% else %}启用{% endif %}
+					</i>
+				  </a>
+                  
+					<a class="btn btn-danger" href="/vMware/resource/disable/{{x.id}}">
+					<i class="halflings-icon white fa fa-fw fa-trash"></i>
+					</a>
+					
+                  </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td>暂无</td>
+                </tr>
+                {% endif %}
+              </table>
+              <form action="" method="post" style="padding-bottom: 30px;margin-bottom: 30px;margin-top: 50px;">
+                <!-- text input -->
+                <input type="text" class="form-control"  id="name" name="name" placeholder="资源位置" style="width: 140px;float: left;margin-right:20px;"/>
+			  	
+			  	
+			  	<select id="vc" name="vc" class="form-control select2" onchange="Change()" style="width:150px;float:left;margin-right:30px;">
+				<option>选择VC</option>
+				{% for x in vcs%}
+					<option value="{{x.id}}" >{{x.host}}</option>
+				{% endfor %}
+				</select>
+				
+				<span style="margin-right: 20px;"></span>
+				<select id="node" name="node" class="form-control select2" onchange="Change2()" style="width:150px;float:left;">
+				<option>选择节点</option>
+				</select>
+				
+				<span style="margin-right: 20px;"></span>
+				<select id="data" name="data" class="form-control select2"  style="width:150px;float:left;">
+				<option>选择数据盘</option>
+				</select>
+				
+				<span style="margin-right: 20px;"></span>
+				<select id="type" name="type" class="form-control select2" style="width:150px;float:left;">
+				<option value="0">自动开通</option>
+				<option value="1">手动开通</option>
+				</select>
+			  	
+			  	
+			  	<button class="btn btn-block btn-success" name="submit" id="submit" style="width: 80px;float: right;margin-left: 25px;">添加</button>
+			  </form>
+			  
+            </div>
+           </div>
+            
+            
+           
+			  
+			  
+			  
+            <!-- /.box-body -->
+            <div class="control-sidebar-bg"></div>
+          </div>
+
+
+
+<!-- Select2 -->
+<script src="/static/plugins/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="/static/js/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- Page script -->
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Datemask dd/mm/yyyy
+    $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //Datemask2 mm/dd/yyyy
+    $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+    //Money Euro
+    $("[data-mask]").inputmask();
+
+    //Date range picker
+    $('#reservation').daterangepicker();
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue'
+    });
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass: 'iradio_flat-green'
+    });
+
+    //Colorpicker
+    $(".my-colorpicker1").colorpicker();
+    //color picker with addon
+    $(".my-colorpicker2").colorpicker();
+
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+  });
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+
+
+<div class="box">
+  <div class="box-header">
+    <h3 class="box-title">用户状态</h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table id="example1" class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th>用户名</th>
+        <th>登录IP</th>
+        <th>内网IP</th>
+        <th>登录时间</th>
+        <th>流量(总)</th>
+        <th>VPN服务器 </th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for x in logs %}
+      <tr>
+        <td><i class="fa fa-fw fa-user"></i>{{x.username}}</td>
+        <td>{% get_ip_address x.From_ip %}</td>
+        <td>{{x.insider_ip}}</td>
+        <td>{% date_con x.log_time %}</td>
+        <td><i class="fa fa-fw fa-cloud-download" title="通过VPN传输到内网的流量"></i> - {% unit_convert_start_kb x.received_bytes %} / <i class="fa fa-fw fa-cloud-upload" title="通过VPN传输到用户电脑的流量"></i> - {% unit_convert_start_kb x.send_bytes %}</td>
+        <td>{{x.vpn_node}}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+      <tr><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- page script -->
+
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

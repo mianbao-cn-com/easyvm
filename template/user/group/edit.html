@@ -1,0 +1,156 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<link rel="stylesheet" href="/static/css/prettify.css" />
+<link rel="stylesheet" href="/static/css/multiselect_style.css" />
+
+<link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+<link rel="stylesheet" href="/static/plugins/iCheck/all.css">
+<link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker-bs3.css">
+
+<style>
+.hr-line-dashed{border-top: 1px dashed #e7eaec;
+    color: #ffffff;
+    background-color: #ffffff;
+    height: 1px;
+    margin: 20px 0;} 
+</style>
+
+<div class="box box-primary" style="width: 75%;padding:20px;">
+
+<form action="" method="post" id="reject_form">
+
+<div class="left" style="margin-bottom: 15px;width: 80%;margin-left: 25px;margin-top: 25px;">
+	<input type="text" class="form-control" required="required" id="name" name="name" value="{{group.name}}">
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div style="width: 80%;margin-left: 25px;">
+<div class="box-header">
+  <h3 class="box-title">组用户列表</h3>
+</div><!-- /.box-header -->
+<div class="box-body no-padding">
+  <table class="table table-condensed">
+    <tbody><tr>
+      <th style="width: 10px"></th>
+      <th>用户名</th>
+      <th>部门</th>
+      <th style="width: 40px">操作</th>
+    </tr>
+    {% for user in users%}
+    <tr>
+      <td>1.</td>
+      <td>{{user.name}}</td>
+      <td>
+        {% GetUserDepartment user.id %}
+      </td>
+      <td><span class="badge bg-red"><a href="#" style="color:#FFFFFF;">移除</a></span></td>
+    </tr>
+	{% endfor %}
+  </tbody></table>
+</div><!-- /.box-body -->
+</div>
+
+<div class="hr-line-dashed"></div>
+
+<div  style="width: 80%;margin-left: 25px;">
+<div >
+<div class="box-header">
+  <h3 class="box-title">组权限列表</h3>
+</div><!-- /.box-header -->
+<div class="box-body no-padding">
+ <div class="row">
+	<div class="col-xs-5">
+		<select name="from" id="keepRenderingSort" class="form-control" size="8" multiple="multiple">
+			{% for otherpe in otherpes %}
+			<option value="{{otherpe.id}}">{{otherpe.name}}</option>
+			{% endfor %}
+		</select>
+	</div>
+	
+	<div class="col-xs-2">
+		<button type="button" id="keepRenderingSort_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+		<button type="button" id="keepRenderingSort_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+		<button type="button" id="keepRenderingSort_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+		<button type="button" id="keepRenderingSort_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+	</div>
+	
+	<div class="col-xs-5">
+		<select name="ownpe" id="keepRenderingSort_to" class="form-control" size="8" multiple="multiple">
+		{% for ownpe in ownpes %}
+			<option value="{{ownpe.id}}">{{ownpe.name}}</option>
+			{% endfor %}
+		</select>
+	</div>
+</div>
+</div><!-- /.box-body -->
+</div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+
+<div class="form-group" style="width: 80%;margin-left: 25px;margin-top:35px;">
+  <label>组备注</label>
+  <textarea class="form-control" rows="3" placeholder="Enter ..." id="remark" name="remark" >{{group.remark}}</textarea>
+</div>
+
+<div style="float:right;margin-right: 115px;">
+	<button class="btn btn-block btn-success" name="submit" id="submit">确认开通</button>
+</div>
+<div style="clear:both"></div>
+</form>
+</div>
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/static/js/prettify.min.js"></script>
+	<script type="text/javascript" src="/static/js/multiselect.min.js"></script>    
+	<script type="text/javascript">
+	$(document).ready(function() {
+		// make code pretty
+		window.prettyPrint && prettyPrint();
+		
+		if ( window.location.hash ) {
+			scrollTo(window.location.hash);
+		}
+		
+		$('.nav').on('click', 'a', function(e) {
+			scrollTo($(this).attr('href'));
+		});		
+		$('#multiselect').multiselect();
+		$('.multiselect').multiselect();
+		$('.js-multiselect').multiselect({
+			right: '#js_multiselect_to_1',
+			rightAll: '#js_right_All_1',
+			rightSelected: '#js_right_Selected_1',
+			leftSelected: '#js_left_Selected_1',
+			leftAll: '#js_left_All_1'
+		});
+
+		$('#keepRenderingSort').multiselect({
+			keepRenderingSort: true
+		});
+
+		$('#undo_redo').multiselect();
+	});
+	
+	function scrollTo( id ) {
+		if ( $(id).length ) {
+			$('html,body').animate({scrollTop: $(id).offset().top - 40},'slow');
+		}
+	}
+	</script>
+	
+	
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$('#multiselect').multiselect({
+		keepRenderingSort: true
+	});
+});
+</script>
+
+{% endblock %}

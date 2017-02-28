@@ -1,0 +1,128 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+ <style>
+ #top_control a {width:80px;float:right;margin-right: 10px;margin-top: 0px;color:#3c8dbc;}
+ #top_control a 
+ </style>
+{% if permission.group_add%}
+ <div style="margin-bottom: 15px;margin-top: -45px;" id="top_control">
+<a href="#" class="btn btn-block btn-default btn-flat" data-toggle="modal" data-target="#myModal">组新增</a>
+
+<div style="clear:both"></div>
+</div>
+{% endif %}
+ 
+ 
+<style>
+#user table td {line-height:34px;}
+</style>
+
+<div class="box" id="user">
+	<div class="box-header">
+		<h3 class="box-title">用户列表</h3>
+	</div>
+<!-- /.box-header -->
+	<div class="box-body">
+		<table id="example1" class="table table-bordered table-striped">
+        	<thead>
+            	<tr>
+                    <th>组名</th>
+                    <th>用户数</th>
+                    <th>备注</th>
+                    {% if permission.group_update or permission.group_del%}
+                    <th>操作</th>
+                    {% endif %}  
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in groups %}
+			<tr>
+				<td>{{group.name}}</td>
+				<td>{% GetGroupUser group.id %}</td>
+				<td>{{group.remark}}</td>
+				<td class="center" style="width:105px">
+				{% if permission.group_update%}
+					<a class="btn btn-info" href="/User/group/edit/{{group.id}}/">
+					<i class="halflings-icon white fa fa-fw fa-edit"></i>  
+					</a>
+				{% endif %}
+				
+				{% if permission.group_del%}
+					<a class="btn btn-danger" href="/User/group/del/{{group.id}}/">
+					<i class="halflings-icon white fa fa-fw fa-trash"></i> 
+					</a>
+				{% endif %}
+				</td>           
+			</tr>
+			{% endfor%}  
+            </tbody>
+                <tfoot>
+                <tr>
+                  	<th>组名</th>
+                    <th>用户数</th>
+                    <th>备注</th>
+                    {% if permission.group_update or permission.group_del%}
+                    <th>操作</th>
+                    {% endif %}  
+                </tr>
+                </tfoot>
+        </table>
+    </div>
+<!-- /.box-body -->
+</div>
+
+
+<div class="modal fade" id="myModal">
+ <div class="modal-dialog">
+   <div class="modal-content" style="margin-top: 100px;">
+        <form action="" method="post" id="reject_form">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">新增用户组</h4>
+     </div>
+     <div class="modal-body">
+<input type="text" id="name" name="name" class="form-control" style="width:30%;float:left;" placeholder="请输入组名" >
+	<input type="text" id="remark" name="remark" class="form-control" style="width:65%;float:left;margin-left: 3%;" placeholder="请输组备注" >
+	<div style="clear:both"></div>
+</div>
+     <div class="modal-footer">
+     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+     <button type="submit" class="btn btn-primary">确定</button>
+   </div>
+   </form>
+     </div>
+ </div>
+          
+</div>
+
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

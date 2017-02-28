@@ -1,0 +1,142 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+ <style>
+ #top_control a {width:80px;float:right;margin-right: 10px;margin-top: 0px;color:#3c8dbc;}
+ #top_control a 
+ </style>
+ 
+  {% if permission.group_list%}
+ <div style="margin-bottom: 15px;margin-top: -45px;" id="top_control">
+
+<a href="User/group/" class="btn btn-block btn-default btn-flat">组权管理</a>
+
+<div style="clear:both"></div>
+</div>
+   {% endif %}
+ 
+ 
+<style>
+#user table td {line-height:34px;}
+</style>
+
+<div class="box" id="user">
+	<div class="box-header">
+		<h3 class="box-title">用户列表</h3>
+	</div>
+<!-- /.box-header -->
+	<div class="box-body">
+		<table id="example1" class="table table-bordered table-striped">
+        	<thead>
+            	<tr>
+                    <th>用户名</th>
+                    <th>部门</th>
+					<th>注册时间</th>
+					<th>角色</th>
+					<th>手机号</th>
+					<th>邮箱</th>
+                    <th>状态</th>          
+                    <th>最后登录时间</th>
+                    {% if permission.user_update or permission.user_update or permission.user_del %}
+                    <th>操作</th>
+                    {% endif %}  
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+			<tr>
+				<td>{{user.name}}</td>
+				<td>{% GetUserDepartment user.id %}</td>
+				<td class="center">{% minute_convert user.register_time%}</td>
+				 <td class="center">
+					<span >{% GetUserGroup user.id %} </span>
+				</td> 
+				<td class="center">{{user.tel}}</td>
+		        <td class="center">{{user.mail}}</td>
+                <td class="center">
+                {% if user.active == 0 %}
+					<span class="label label-success">正常用户</span>
+				{% elif user.active == 1 %}
+					<span class="label" style="background-color: #B4B8B6 !important;">&nbsp;&nbsp;未 验 证&nbsp;&nbsp;</span>
+				{% elif user.active == 2 %}
+					<span class="label" style="background-color: #B4B8B6 !important;">禁用用户</span>
+				{% elif user.active == 3 %}
+					<span class="label label-warning">密码重置</span>
+				{% else %}
+					<span class="label label-success">未知状态</span>
+				{% endif %}
+                </td>
+               
+		       <td class="center">{% minute_convert user.last_login%}</td>
+				<td class="center">
+				{% if permission.user_update%}
+					<a class="btn btn-info" href="/User/edit/{{user.id}}/">
+					<i class="halflings-icon white fa fa-fw fa-edit"></i>  
+					</a>
+				{% endif %}
+					
+				{% if permission.user_update%}
+					<a class="btn btn-danger" href="/User/UpdateReset/{{user.id}}/">
+					<i class="halflings-icon white fa fa-fw fa-history"></i> 
+					</a>
+				{% endif %}
+				
+				{% if permission.user_del%}
+					<a class="btn btn-danger" href="/User/del/{{user.id}}/">
+					<i class="halflings-icon white fa fa-fw fa-trash"></i> 
+					</a>
+				{% endif %}
+				
+				
+				</td>           
+			</tr>
+			{% endfor%}  
+            </tbody>
+                <tfoot>
+                <tr>
+                  	 <th>用户名</th>
+					<th>注册时间</th>
+					<th>手机号</th>
+					<th>邮箱</th>
+                    <th>状态</th>          
+                    <th>角色</th>
+                    <th>最后登录时间</th>
+                    {% if permission.user_update or permission.user_update or permission.user_del %}
+                    <th>操作</th>
+                    {% endif %}  
+                </tr>
+                </tfoot>
+        </table>
+    </div>
+<!-- /.box-body -->
+</div>
+
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

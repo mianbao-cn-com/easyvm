@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>注册-{{title}}--面包</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="/static//bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="/static/plugins/iCheck/square/blue.css">
+
+  </head>
+  <script type="text/javascript">
+	function Change(){
+		var register_mail = $("#name").val();
+		if(register_mail != ''){
+			$.ajax({
+				url:"/User/Ajax/"+register_mail+"/check/",
+				type:"POST",
+				success:function(arg){
+					console.log(arg)
+					if(arg == 0){
+						$("#send_rs").html("");
+						$("#submit").removeAttr("disabled");
+						$("#submit").css("background","rgba(6, 127, 228, 0.71)");
+					}else{
+						$("#send_rs").html('* 此邮箱已申请过帐号');
+						$("#submit").attr("disabled","true");
+						$("#submit").css("background","#c2c2c2");
+					}
+				}
+				
+			})
+		}
+	}
+</script>
+
+<script type="text/javascript">
+	function confirm_pwd(){
+		var pwd = $("#password").val();
+		var conf_pwd = $("#password2").val();
+		if(pwd == conf_pwd){
+			$("#send_pw").html("");
+		}else{
+			$("#send_pw").html('* 两次密码不匹配');
+		}
+	}
+</script>
+
+  <body class="hold-transition">
+  <style>
+  #registerform input {line-height:45px;height:45px;}
+  #registerform span {line-height:45px;height:45px;}
+  #registerform select {line-height:45px;height:45px;}
+  #registerform div {margin-top:30px;}
+  </style>
+<div class="register-box" style="width:500px;">
+      <div class="register-logo">
+        <a href="/static/index2.html"><b>Mianbao</b>轻松运维</a>
+      </div>
+
+      <div class="register-box-body" style="width: 400px;margin: auto;">
+        <form action="" method="post" id="registerform">
+        
+        	<div class="form-group has-feedback">
+            <input id="name" name="name" class="form-control" placeholder="输入邮箱地址" required="required" onblur="Change(this);">
+            <span class="form-control-feedback" style="margin-right:100px;">{{mail_add}}</span>
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            <div id="send_rs" style="color:red;font-size: 14px;margin-top: 10px;"></div>
+          </div>
+          
+          <div class="form-group has-feedback">
+            <input id="password" name="password" type="password" class="form-control" placeholder="输入密码" required="required">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input id="password2" name="password2" type="password" class="form-control" placeholder="再次输入密码" required="required" onblur="confirm_pwd(this);">
+            <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+            <div id="send_pw" style="color:red;font-size: 14px;margin-top: 10px;"></div>
+          </div>
+          
+          <div class="form-group has-feedback">
+            <input id="tel" name="tel" type="phone" class="form-control" id="exampleInputEmail1" placeholder="输入手机号码" required="required">
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+          </div>
+          
+           <div class="form-group has-feedback">
+	          <select id="department" name="department" style="width: 100%;" class="form-control select2" required="required">
+					<option>选择部门</option>
+					{% for department in departments %}
+					<option value="{{department.id}}">{{department.name}}</option>
+					{% endfor %}
+				</select>
+          </div>
+          <div class="row" style="width: 362px;margin: auto;margin-top:35px;">
+              <button type="submit" class="btn btn-primary btn-block btn-flat" style="height: 45px;">开启轻松运维</button>
+          </div>
+        </form>
+
+        <div class="social-auth-links text-center">
+          
+        </div>
+      </div><!-- /.form-box -->
+    </div><!-- /.register-box -->
+
+    <!-- jQuery 2.1.4 -->
+    <script src="/static/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- iCheck -->
+    <script src="/static/plugins/iCheck/icheck.min.js"></script>
+    <script>
+      $(function () {
+        $('input').iCheck({
+          checkboxClass: 'icheckbox_square-blue',
+          radioClass: 'iradio_square-blue',
+          increaseArea: '20%' // optional
+        });
+      });
+    </script>
+  </body>
+</html>

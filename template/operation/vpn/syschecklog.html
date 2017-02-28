@@ -1,0 +1,65 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+  <!-- DataTables -->
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+
+
+<div class="box">
+  <div class="box-header">
+    <h3 class="box-title">用户状态</h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <table id="example1" class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th>用户名</th>
+        <th>申请时间</th>
+        <th>操作</th>
+        <th>时间</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for x in logs %}
+      <tr>
+        <td><i class="fa fa-fw fa-user"></i>{{x.mail_add}}</td>
+        <td>{% get_register_time x.source_id %}</td>
+        <td>{% log_num_to_auction x.remind_level %}</td>
+        <td>{% date_con x.remind_time %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+      <tfoot>
+      <tr><td></td></tr>
+      </tfoot>
+    </table>
+  </div>
+  <!-- /.box-body -->
+</div>
+
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- page script -->
+
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends "header.html" %}
+{% load  web_tag %}
+{% block conten %}
+
+
+<link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+<link rel="stylesheet" href="/static/plugins/iCheck/all.css">
+<link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker-bs3.css">
+
+<style>
+tr {height:50px;}
+td {padding-top: 15px;}
+#network ul{list-style:none;line-height:35px;padding:0px;float:left;margin-right:35px;}
+.clear{ clear:both} 
+</style>
+
+{% if permission.vmware_manage %}
+	{% for error in errors %}
+		<div class="alert alert-danger alert-dismissable" style="width: 75%;min-width: 1125px;">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<h4><i class="icon fa fa-ban"></i> {{error.item}}</h4>
+			{{error.detail}}
+		</div>
+	{% endfor %}
+{% endif %}
+
+<div class="box box-primary" style="width: 75%;min-width: 1125px;">
+	<div style="width:80%;margin:20px;">
+            <div class="box-header with-border">
+             <h3 class="box-title">详情</h3>
+             <span style="float:right;"><i class="fa fa-fw fa-clock-o"></i>{% minute_convert order.applytime %}</span>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="padding-bottom: 35px;">
+            
+            <div style="margin-top: 25px;">
+            	
+            
+                  <table class="detail table table-condensed" id='detail'>
+                    <tbody>
+                    <tr>
+                      <td>
+	                      <span style="float: left;background-position: 0 -258px;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;background-position: 0px -262px;padding-left: 25px;">
+							申请人：{{order.uid.name}}
+						  </span>
+					  </td>
+                      <td>
+                      	<span style="float: left;display:block;width:30px;height:30px;margin-left:140px;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;background-position: -95px -634px;"></span>
+						<span style="float:left;">邮箱：{{order.uid.mail}}</span>
+					  </td>
+                      <td>
+                        <span style="float: left;display:block;width:30px;height:30px;margin-left:140px;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;background-position: 0 -633px;"></span>
+						<span style="float:left;">手机：{{order.uid.tel}}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      	<span style="float: left;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;background-position: 0 -146px;padding-left: 25px;">
+							虚拟机数量：{{order.num}} 台
+						</span>
+					  </td>
+                      <td>
+                      	<span style="float: left;display:block;width:30px;height:30px;margin-left:140px;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;background-position: -95px -634px;"></span>
+						<span style="float:left;">资源池：{{order.resource.name}}</span>
+					  </td>
+                      <td>
+ 						<i style="background: url(/static/img/vhost-icon.png) no-repeat 0 0;margin-left:140px;background-position: -32px top;width: 16px;height: 15px;    display: inline-block;vertical-align: middle;"></i>
+						<span>结束时间：{% date_convert order.endtime %}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                      	<span style="float: left;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;    background-position: 0 -96px;height: 30px;padding-left: 25px;">
+							模板：{{order.template.template.name}}
+						</span>
+					</td>
+                      <td>
+                      	<span style="float: left;display:block;width:30px;height:30px;margin-left:140px;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;    background-position: 0 -207px;"></span>
+						<span style="float:left;">配置：{{order.template.template.Core}}Core/{{order.template.template.memory}}M</span>
+					</td>
+                      <td>
+                       <span style="float: left;display:block;width:30px;height:30px;margin-left:140px;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;background-position: 0 -633px;"></span>
+						<span style="float:left;">订单状态：{% OrderStatus order.status %}</span>
+                      </td>
+                    </tr>
+                    
+                     <tr>
+                      <td colspan=3 >
+                      	<span style="float: left;background: url(/static/img/manager-icon.jpg) no-repeat 0 0;    background-position: 0 -96px;height: 30px;padding-left: 25px;">
+							项目用途：{{order.project}}
+						</span>
+					</td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
+				
+				  <div id='network'>
+				  	<ul>
+				  		{% for names in info %}
+				  			{%if names.key == 'name'%}
+				  				<li><img src="/static/img/computer2.png" style="width: 25px;margin-right: 10px;">{{names.val}}</li>
+				  			{% endif %}
+				  		{% endfor %}
+				  	</ul>
+				  	<ul>
+				  		{% for ips in info %}
+				  			{%if ips.key == 'ip'%}
+				  				<li>{{ips.val}}</li>
+				  			{% endif %}
+				  		{% endfor %}
+				  	</ul>
+				  	<div style="clear:both"></div>
+				  </div>
+				  <div>
+				  		<img src="/static/img/tips.png" style="width: 20px;margin-right: 10px;"><span>子网掩码：{% for net in info %}{% if net.key == 'netmask' %}{{net.val}}{% endif %}{% endfor %}</span>
+				  		&nbsp;&nbsp;&nbsp;&nbsp;<span>网关：{% for gateway in info %}{% if gateway.key == 'gateway' %}{{gateway.val}}{% endif %}{% endfor %}</span>
+				  		&nbsp;&nbsp;&nbsp;&nbsp;<span>DNS：{% for dns in info %}{% if dns.key == 'dns1' or dns.key == 'dns2' %}&nbsp;{{dns.val}}&nbsp; {% endif %}{% endfor %}</span>
+				  	</div>
+            </div>
+            
+            </div>
+            <!-- /.box-body -->
+            <div class="control-sidebar-bg"></div>
+          </div>
+</div>
+
+
+
+<!-- Select2 -->
+<script src="/static/plugins/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="/static/js/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- Page script -->
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Datemask dd/mm/yyyy
+    $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //Datemask2 mm/dd/yyyy
+    $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+    //Money Euro
+    $("[data-mask]").inputmask();
+
+    //Date range picker
+    $('#reservation').daterangepicker();
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue'
+    });
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass: 'iradio_flat-green'
+    });
+
+    //Colorpicker
+    $(".my-colorpicker1").colorpicker();
+    //color picker with addon
+    $(".my-colorpicker2").colorpicker();
+
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+  });
+</script>
+
+
+
+{% endblock %}

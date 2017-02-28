@@ -1,0 +1,345 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+
+<style>
+#asset_add {margin-left: -5px;width:1100px;border: 1px solid #b4cef8;margin-bottom:30px;background: #ffffff;}
+.div_width {width:100%;}
+.left {width:48%;float:left;display:block;min-height: 30px;margin-left:2%}
+.asset_input {width:95%}
+.asset_input input:hover{border:1px solid #red; color:#0C0;}
+.asset_input input:focus{border:1px solid #fe6102; color:#0C0;}
+#asset_add h3 {border-bottom: 1px solid #eee;padding-bottom: 5px;margin: 15px 1% 20px 2% !important;font-weight: 300;font-size: 24.5px;line-height: 40px;}
+#selectError2_chzn {width:165px;}
+#asset_add input{transition:all 0.30s ease-in-out;-webkit-transition: all 0.30s ease-in-out;-moz-transition: all 0.30s ease-in-out;border-radius:3px;outline:none;}
+#asset_add input:focus{box-shadow:0 0 5px rgba(81, 203, 238, 1);-webkit-box-shadow:0 0 5px rgba(81, 203, 238, 1);-moz-box-shadow:0 0 5px rgba(81, 203, 238, 1);}
+#asset_add label{height:25px;line-height:25px;margin-top:10px;}
+</style>
+
+
+
+<div id="asset_add">
+	<form action="{{url}}" method="post" >
+	<div class="div_width">
+		<div><h3>资产信息</h3>
+			<button type="submit" class="btn btn-primary" style="float: right;margin-top: -65px;margin-right:10px;" id="asset_submit">确定添加</button>
+			{% if edit = 0 %}
+			<INPUT TYPE=hidden NAME="History" VALUE="{{now_oa.id}}">
+			<INPUT TYPE=hidden NAME="Huser" VALUE="{{now_oa.Cuser}}">
+			{% endif %}
+		</div>
+		<div class="left">
+			<label>资产编号</label>
+			<input type="text" id="Asset_num" name="Asset_num" class="form-control" value="{{now_oa.num}}">
+		</div>
+		
+		
+		<div class="left">
+		<div style="width:30%;float:left;min-height: 30px;">
+			<label>类型</label>
+			<select id="type" name="type" style="width: 100%;" class="form-control select2">
+				<option>选择类型</option>
+				{% for type in types%}
+				<option value="{{type.id}}" {% select_check type.id now_oa.Type %} >{{type.type}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:32%;float:left;min-height: 30px;margin-left:2%">
+			<label>品牌</label>
+			<select id="brands" name="brands" style="width: 100%;" class="form-control select2">
+				<option>选择品牌</option>
+				{% for ad in brands %}
+				<option value="{{ad.id}}" {% select_check ad.id now_oa.Brands %} >{{ad.brands}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:32%;float:left;min-height: 30px;margin-left:2%">
+			<label>型号</label>
+			<select id="model" name="model" style="width: 100%;" class="form-control select2">
+				<option>选择型号</option>
+				{% for mo in model%}
+				<option value="{{mo.id}}" {% select_check mo.id now_oa.Model %} >{{mo.model}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>供应商</label>
+			<select id="supplier" name="supplier" style="width: 100%;" class="form-control select2">
+				<option>选择供应商</option>
+				{% for sup in supplier %}
+				<option value="{{sup.id}}" {% select_check sup.id now_oa.Supplier %} >{{sup.supplier}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:4%">
+			<label>购买日期</label>
+			<input type="text" id="buy_time" name="buy_time" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask value="{{now_oa.Buy_time}}">
+		</div>
+		</div>
+		
+		
+		<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>价格</label>
+			<input type="text" id="pice" name="pice" class="form-control" value="{{now_oa.Pice}}">
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:2%">
+			<label>质保时间</label>
+			<select id="warranty" name="warranty" style="width: 100%;" class="form-control select2">
+				<option>质保时间</option>
+				{% for war in warranty %}
+				<option value="{{war.id}}" {% select_check war.id now_oa.Warranty %} >{{war.warranty}} 年</option>
+				{% endfor %}
+			</select>
+		</div>
+		</div>
+		
+		
+		<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>用户</label>
+			<select id="user" name="user" style="width: 100%;" class="form-control select2">
+				<option>用户</option>
+				{% for user in users %}
+				<option value="{{user.id}}" {% select_check user.id now_oa.User %} >{{user.Username}}{{user.user_name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:4%">
+		<label> </label>
+		<div>
+			<a href="#" data-toggle="modal" data-target="#myModal">新增</a>
+		</div>
+		</div>
+		</div>
+		
+		<div class="left">
+		<div style="width:48%;float:left;min-height: 30px;">
+			<label>地点</label>
+			<select id="address" name="address" style="width: 100%;" class="form-control select2">
+				<option>地点</option>
+				{% for add in address %}
+				<option value="{{add.id}}" {% select_check add.id now_oa.Address %} >{{add.address}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		<div style="width:48%;float:left;min-height: 30px;margin-left:2%">
+			<label>部门</label>
+			<select id="department" name="department" style="width: 100%;" class="form-control select2">
+				<option>部门</option>
+				{% for depar in department %}
+				<option value="{{depar.id}}" {% select_check depar.id now_oa.Department %} >{{depar.department}}</option>
+				{% endfor %}
+			</select>
+		</div>
+		</div>
+		<div style="clear:both;"></div>
+		</div>
+		
+		<div class="div_width">
+		<div style="width:100%"><h3>硬件信息</h3></div>
+		
+		<div class="left">
+			<label>配置单</label>
+			<select id="conf" name="conf" style="width: 100%;" class="form-control select2">
+			<option>请选择配置</option>
+			{% for conf in confs%}
+				<option value="{{conf.id}}" {% select_check conf.id now_oa.Conf %} >{{conf.CPU}}/{{conf.Memory}}/{{conf.Disk}}{% check_none conf.GPU %}</option>
+			{% endfor %}
+			</select>
+		</div>
+		
+		<div class="left">
+		<label>显示器尺寸</label>
+			<select id="monitor_size" name="monitor_size" style="width: 98%;" class="form-control select2">
+				<option>尺寸</option>
+				{% for mon in monitor_size %}
+				<option value="{{mon.id}}" {% select_check mon.id now_oa.Monitor_size %} >{{mon.monitor_size}} 寸</option>
+				{% endfor %}
+			</select>
+		</div>
+		
+		<div class="left">
+			<label>SN</label>
+			<input type="text" id="sn" name="sn" class="form-control" value="{{now_oa.SN}}">
+		</div>
+		
+		<div class="left" >
+		<div style="width:98%;">
+		<label>快速服务代码</label>
+			<input type="text" id="qsn" name="qsn" class="form-control" value="{{now_oa.QSN}}">
+			</div>
+		</div>
+		
+		<div style="clear:both;"></div>
+		</div>
+		<div class="div_width">
+		<div style="width:100%"><h3>备注</h3></div>
+			<textarea name="remark" id="remark" style="margin-left: 2%;width:96%;height:150px;" placeholder="备注让生活变的更精彩.....">{{now_oa.Remark}}</textarea>
+	</div>
+		
+	</div>
+	</form>
+
+<div style="clear:both;"></div>
+</div>
+
+<div class="modal fade" id="myModal">
+   <div class="modal-dialog">
+     <div class="modal-content" style="margin-top: 100px;">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span></button>
+         <h4 class="modal-title">新增用户信息</h4>
+       </div>
+       <div class="modal-body">
+		<input type="text" id="trunk_mail" name="trunk_mail" class="form-control" style="width:30%;" placeholder="请输入用户邮箱" >
+       	<label style="float:right;margin-right:48%;margin-top:-30px;font-size:18px;font-weight: 400;">@howbuy.com</label>
+       </div>
+       <div class="modal-footer">
+       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-primary" onclick="user_add()">保 存</button>
+     </div>
+       </div>
+   </div>
+</div>
+
+
+<div class="modal fade" id="myModal">
+   <div class="modal-dialog">
+     <div class="modal-content" style="margin-top: 100px;">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span></button>
+         <h4 class="modal-title">新增用户信息</h4>
+       </div>
+       <div class="modal-body">
+		<input type="text" id="trunk_mail" name="trunk_mail" class="form-control" style="width:30%;" placeholder="请输入用户邮箱" >
+       	<label style="float:right;margin-right:48%;margin-top:-30px;font-size:18px;font-weight: 400;">@howbuy.com</label>
+       </div>
+       <div class="modal-footer">
+       <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-primary" onclick="user_add()">保 存</button>
+     </div>
+       </div>
+   </div>
+</div>
+
+
+
+<script type="text/javascript">
+<!--
+function user_add(){
+	var mail = $('#trunk_mail').val()
+	$.ajax({
+		url:"/Ajax/"+ mail +"/assetoa/useradd/",
+		type:"POST",
+		success:function(arg){
+			if(arg != 1){
+				$("<option value='1."+arg+"' selected=\"selected\">"+mail+"</option>").appendTo($("#user"));
+				$("#select2-user-container").html(mail);
+				$("#myModal").hide()
+				$(".modal-backdrop").remove()
+				$("body").removeClass("modal-open")
+			}else{
+				console.log(arg)
+			}
+		}
+	})
+}
+//-->
+</script>
+
+
+
+
+<!-- Select2 -->
+<script src="/static/plugins/select2/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="/static/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/static/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<!-- date-range-picker -->
+<script src="/static/js/moment.min.js"></script>
+<script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap color picker -->
+<script src="/static/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
+<!-- bootstrap time picker -->
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- SlimScroll 1.3.0 -->
+<script src="/static/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="/static/plugins/iCheck/icheck.min.js"></script>
+<!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/static/dist/js/demo.js"></script>
+<!-- Page script -->
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $(".select2").select2();
+
+    //Datemask dd/mm/yyyy
+    $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+    //Datemask2 mm/dd/yyyy
+    $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+    //Money Euro
+    $("[data-mask]").inputmask();
+
+    //Date range picker
+    $('#reservation').daterangepicker();
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
+        },
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue'
+    });
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass: 'iradio_minimal-red'
+    });
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass: 'iradio_flat-green'
+    });
+
+    //Colorpicker
+    $(".my-colorpicker1").colorpicker();
+    //color picker with addon
+    $(".my-colorpicker2").colorpicker();
+
+    //Timepicker
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+  });
+</script>
+
+{% endblock %}

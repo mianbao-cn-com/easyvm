@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<!--
+This is a starter template page. Use this page to start your new project from
+scratch. This page gets rid of all links and provides the needed markup only.
+-->
+{% load web_tag %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{title}}--面包</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="/static/plugins/select2/select2.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
+      <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="/static/dist/css/skins/_all-skins.min.css">
+    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+          page. However, you can choose any other skin. Make sure you
+          apply the skin class to the body tag so the changes take effect.
+    -->
+    <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
+	
+	<link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker-bs3.css">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="/static/plugins/iCheck/all.css">
+  <!-- Bootstrap Color Picker -->
+  <link rel="stylesheet" href="/static/plugins/colorpicker/bootstrap-colorpicker.min.css">
+  <!-- Bootstrap time Picker -->
+  <link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+    <script src="/static/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/static/dist/js/app.min.js"></script>
+    <link REL="SHORTCUT ICON" HREF="/static/favicon.ico">
+  </head>
+  <body class="hold-transition skin-blue sidebar-mini {{bodycss}}">
+    <div class="wrapper">
+
+      <!-- Main Header -->
+      <header class="main-header">
+
+        <!-- Logo -->
+        <a href="/welcome/" class="logo">
+          <!-- mini logo for sidebar mini 50x50 pixels -->
+          <span class="logo-mini"><b>C</b></span>
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg"><b>CMDB</b></span>
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <!-- Navbar Right Menu -->
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- Messages: style can be found in dropdown.less-->
+              
+
+              <!-- Notifications Menu -->
+              
+              <!-- Tasks Menu -->
+              
+              <!-- User Account Menu -->
+              <li class="dropdown user user-menu">
+                <!-- Menu Toggle Button -->
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <!-- The user image in the navbar-->
+                  <img src="/static/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                  <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                  <span class="hidden-xs">{{name}}</span>
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- The user image in the menu -->
+                  <li class="user-header">
+                    <img src="/static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                    <p>
+                      让交付不再困难！
+                      <small>{{dpname}}</small>
+                    </p>
+                  </li>
+                  <!-- Menu Body -->
+                  <li class="user-body" style="padding: 8px;">
+                    <div class="col-xs-4 text-center">
+                      <a href="/User/UpdatePwd/">修改密码</a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#"></a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#"></a>
+                    </div>
+                  </li>
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+                      <a href="#" class="btn btn-default btn-flat">设置</a>
+                    </div>
+                    <div class="pull-right">
+                      <a href="/logout/" class="btn btn-default btn-flat">退出</a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <!-- Control Sidebar Toggle Button -->
+              <li style="width:10px;"></li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+
+          <!-- Sidebar user panel (optional) -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="/static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+              <p>{{name}}</p>
+              <!-- Status -->
+              <a href="#"><i class="fa fa-circle text-success"></i>在线</a>
+            </div>
+          </div>
+          <ul class="sidebar-menu">
+            <li class="header">导航</li>
+            <!-- Optionally, you can add icons to the links -->
+            {% if power < 100%}
+            <!--<li class="{% return_class set_class  'dashboard'%}"><a href="/Dashboard/"><i class="fa fa-dashboard"></i> <span>控制台</span></a></li>-->
+         	{% endif %}
+         	
+         	<li class="treeview {% return_class set_class  'dashboard'%} {% return_class set_class  'apply'%} {% return_class set_class  'order'%} {% return_class set_class  'vmware'%}">
+	          <a href="#">
+	            <i class="fa fa-cloud"></i> <span>云平台</span>
+	            <i class="fa fa-angle-left pull-right"></i>
+	          </a>
+          	  <ul class="treeview-menu">
+            	{% if permission.vm_manage %}
+	         	<li class="{% return_class set_class  'dashboard'%}"><a href="/vMware/vm/"><i class="fa fa-circle-o "></i><span>云主机管理</span></a></li>
+	         	{% endif %}
+	         	
+	         	<li class="{% return_class set_class  'apply'%}"><a href="/vMware/apply/"><i class="fa fa-circle-o "></i> <span>虚拟机申请</span></a></li>
+	         	
+	         	{% if not permission.vmware_manage %}
+	         	<li class="{% return_class set_class  'order'%}"><a href="/vMware/myorder/"><i class="fa fa-circle-o "></i> <span>申请管理</span></a></li>
+	         	{% endif %}
+	         	
+	         	{% if permission.vmware_manage %}
+	         	<li class="{% return_class set_class  'vmware'%}"><a href="/vMware/manage/"><i class="fa fa-circle-o "></i> <span>虚拟机管理</span></a></li>
+	         	{% endif %}
+          	  </ul>
+          	</li>
+
+			
+			<li class="treeview {% return_class set_class 'asset' %}">
+          	<a href="#">
+            	<i class="fa fa-laptop"></i> <span>应用管理</span>
+            	<i class="fa fa-angle-left pull-right"></i>
+          	</a>
+          	<ul class="treeview-menu">
+          		<li class="{% return_class set_class 'pro' %}"><a href="/application/app/list/"><i class="fa fa-circle-o "></i>应用管理</a>
+            	<li class="{% return_class set_class 'asset' %}"><a href="/application/list/"><i class="fa fa-circle-o "></i>主机管理</a>
+           	</ul>
+          	</li>
+			
+			
+          {% if permission.user_update or permission.user_list or permission.user_add or permission.del %}
+          <li class="{% return_class set_class 'user' %}"><a href="/User/"><i class="fa fa-user"></i> <span>用户信息</span></a></li>
+          {% endif %}
+          <li class="{% return_class set_class 'Log' %}">
+        	<a href="/log/"><i class="fa fa-reorder"></i> <span>日志</span></a>
+        </li>
+          </ul><!-- /.sidebar-menu -->
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header" style="width: 30%;">
+          <h1>
+            {{where}}
+            /<small>{{site}}</small>
+          </h1>
+          
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+          {% block conten %}{% endblock %}
+
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+
+      <!-- Main Footer -->
+      <footer class="main-footer">
+        <!-- To the right -->
+        <div class="pull-right hidden-xs">
+          mianbao.cn.com
+        </div>
+        <!-- Default to the left -->
+        <strong>Copyright &copy; 2015 <a href="#">Company</a>.</strong> All rights reserved.
+      </footer>
+
+      <!-- Control Sidebar -->
+      <aside class="control-sidebar control-sidebar-dark">
+        <!-- Create the tabs -->
+        <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+          <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+          <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <!-- Home tab content -->
+          <div class="tab-pane active" id="control-sidebar-home-tab">
+            <h3 class="control-sidebar-heading">Recent Activity</h3>
+            <ul class="control-sidebar-menu">
+              <li>
+                <a href="javascript::;">
+                  <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                  <div class="menu-info">
+                    <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                    <p>Will be 23 on April 24th</p>
+                  </div>
+                </a>
+              </li>
+            </ul><!-- /.control-sidebar-menu -->
+
+            <h3 class="control-sidebar-heading">Tasks Progress</h3>
+            <ul class="control-sidebar-menu">
+              <li>
+                <a href="javascript::;">
+                  <h4 class="control-sidebar-subheading">
+                    Custom Template Design
+                    <span class="label label-danger pull-right">70%</span>
+                  </h4>
+                  <div class="progress progress-xxs">
+                    <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
+                  </div>
+                </a>
+              </li>
+            </ul><!-- /.control-sidebar-menu -->
+
+          </div><!-- /.tab-pane -->
+          <!-- Stats tab content -->
+          <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div><!-- /.tab-pane -->
+          <!-- Settings tab content -->
+          <div class="tab-pane" id="control-sidebar-settings-tab">
+            <form method="post">
+              <h3 class="control-sidebar-heading">General Settings</h3>
+              <div class="form-group">
+                <label class="control-sidebar-subheading">
+                  Report panel usage
+                  <input type="checkbox" class="pull-right" checked>
+                </label>
+                <p>
+                  Some information about this general settings option
+                </p>
+              </div><!-- /.form-group -->
+            </form>
+          </div><!-- /.tab-pane -->
+        </div>
+      </aside><!-- /.control-sidebar -->
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div class="control-sidebar-bg"></div>
+    </div><!-- ./wrapper -->
+
+    <!-- REQUIRED JS SCRIPTS -->
+
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
+   <!-- FastClick -->
+<script src="/static/plugins/fastclick/fastclick.js"></script>
+  </body>
+</html>

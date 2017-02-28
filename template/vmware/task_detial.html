@@ -1,0 +1,344 @@
+{% extends "header.html" %}
+{% load  cmdb_tag %}
+{% block conten %}
+
+  <ul class="timeline">
+
+	
+    <!-- timeline time label -->
+    <li class="time-label">
+        <span class="bg-red">
+            {% day_con now%}
+        </span>
+    </li>
+    <!-- /.timeline-label -->
+	{% for x in task_detial%}
+	{% if x.status <= 2 %}
+	<a class="btn btn-danger" href="/vmware/task/recall/{{x.id}}" style="float: right;margin-top: -45px;margin-right: 100px;position: inherit;width: 60px;">
+		<i class="halflings-icon white fa fa-trash">撤回</i> 
+	</a>
+	{% endif %}
+	{% if x.status != 8 and x.status != 9%}
+	{% if x.uid == uid %}
+	<button class="btn btn-success"  style="float: right;margin-top: -45px;margin-right: 25px;position: inherit;width: 60px;" data-toggle="modal" data-target="#myModal">
+工单</button>
+	{% endif %}
+	{% endif %}
+	
+	
+	{% if work_num != 0 %}
+	{% for m in works_father_id %}
+	<!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa  fa-bookmark-o bg-blue"></i>
+        <div class="timeline-item">
+        	
+            <span class="time"><i class="fa fa-clock-o"></i> 
+            {% if m.status == 100 %}
+            		已完成！
+            {% else %}
+            		正在进行中...
+            {% endif %}
+            </span>
+
+            <h3 class="timeline-header"><a href="#">工单(编号:{{m.id}})</a> ...</h3>
+
+            <div class="timeline-body">
+              <div class="box" style="margin-top: 15px;">
+                <div class="box-body no-padding">
+                  <table class="table">
+                    <tr>
+                      <th>时间</th>
+                      <th>对像</th>
+                      <th>操作内容</th>
+                      <th>用户</th>
+                    </tr>
+                    {% for y in work_order %}
+                    {% if y.father == m.id or y.id == m.id %}
+                    <tr>
+                    {% if y.rs_time != '0' %}
+                      <td>{% date_con y.rs_time%}</td>
+                    {% elif y.check_time != '0' %}
+                      <td>{% date_con y.check_time%}</td>
+                     {% else %}
+                     	<td>{% date_con y.create_time%}</td>
+                    {% endif %}
+                      <td>{{y.vm_name}}</td>
+                      <td>{{y.content}}</td>
+                    {% if y.user == 0 %}
+                      <td>{% user_info uid %}</td>
+                    {% else %}
+                    	<td>{% user_info y.user %}</td>
+                    {% endif %}
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div>
+
+            <div class="timeline-footer">
+            {% if m.status != 100 %}
+            <a class="btn btn-danger" href="/vmware/order/ok/{{m.id}}/" style="float:left;margin-top: -35px;position: inherit;width: 60px;">
+				<i style="font-style: inherit;">完成</i> 
+			</a>
+                <a class="btn btn-success" href="/vmware/order/follow/{{m.id}}/1" style="float: right;margin-top: -35px;position: inherit;width: 60px;">
+		<i style="font-style: inherit;">追单</i> 
+				</a>
+				{% endif %}
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	{% endfor %}
+	{% endif %}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	{% if x.status == 100 %}
+	
+	<!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa  fa-bookmark-o bg-blue"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con x.rs_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">已交付</a> ...</h3>
+
+            <div class="timeline-body">
+               <div> 亲，机器我们已交付给你了！有什么问题请尽管说（反正我也帮不了你...）！！</div>
+              
+              <div class="box" style="margin-top: 15px;">
+                <div class="box-body no-padding">
+                  <table class="table">
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>云主机名</th>
+                      <th>IP地址</th>
+                      <th>配置</th>
+                    </tr>
+                    {% for y in virtuals %}
+                    <tr>
+                      <td>1.</td>
+                      <td>{{y.name}}</td>
+                      <td>{{y.ip}}</td>
+                      <td>{% vmid_configure x.template_name %}</td>
+                    </tr>
+                    {% endfor %}
+                  </table>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div>
+
+            <div class="timeline-footer">
+                
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	
+	{% endif %}
+	
+	
+	{% if x.status == 8 %}
+	
+	<!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-close bg-red"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con x.check_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">无情驳回</a> ...</h3>
+
+            <div class="timeline-body">
+                我想对你说：
+                <span style="color: #3c8dbc;"> <i class="fa fa-fw fa-commenting"></i> {% GetRejectReson x.id %}</span>
+            </div>
+
+            <div class="timeline-footer">
+                
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	
+	{% endif %}
+	{% if x.status == 9 %}
+	
+	<!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-close bg-red"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con x.rs_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">撤回任务</a> ...</h3>
+
+            <div class="timeline-body">
+               您已撤回了此任务！
+            </div>
+
+            <div class="timeline-footer">
+                
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	
+	{% endif %}
+	
+	
+	
+	
+	{% if x.status > 3 and x.status != 9 and x.status != 8%}
+	
+	<!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-legal bg-blue"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con x.check_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">正在做最后的确认</a> ...</h3>
+
+            <div class="timeline-body">
+                我们的工程师们正在做最后的验收确认，为了让您用着更爽，请再耐心等待一下下，麻烦了，客官......
+            </div>
+
+            <div class="timeline-footer">
+                
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	
+	{% endif %}
+	
+	
+	{% if x.status > 1 and x.status != 9 and x.status != 8%}
+	
+	<!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-puzzle-piece bg-blue"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con x.check_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">正在开通</a> ...</h3>
+
+            <div class="timeline-body">
+                您所申请的虚拟机正在开通中......
+                
+            </div>
+
+            <div class="timeline-footer">
+                
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	
+	{% endif %}
+	
+	
+	{% if x.status > 0 and x.status != 9 and x.status != 8 %}
+	
+	<!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-check bg-red"></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con x.check_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">通过审核</a> ...</h3>
+
+            <div class="timeline-body">
+                您的申请已于  {% date_con x.check_time %} 由管理员 {% user_info x.uid %} 审核通过。请耐心等待开通.....
+            </div>
+
+            <div class="timeline-footer">
+                
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	
+	{% endif %}
+    <!-- timeline item -->
+    <li>
+        <!-- timeline icon -->
+        <i class="fa fa-envelope bg-blue "></i>
+        <div class="timeline-item">
+            <span class="time"><i class="fa fa-clock-o"></i> {% time_con x.create_time %}</span>
+
+            <h3 class="timeline-header"><a href="#">提交申请</a> ...</h3>
+
+            <div class="timeline-body">
+                您申请了 {{x.num}} 台 {% from_template_id_get_type x.template_name %} 类型的云主机，用于  {{x.remark}} ，暂定使用到 {% day_con x.powoff_time %} 。
+            </div>
+
+            <div class="timeline-footer">
+                
+            </div>
+        </div>
+    </li>
+    <!-- END timeline item -->
+	{% endfor %}
+<li>
+	<i class="fa fa-clock-o bg-gray"></i>
+</li>
+
+</ul>
+
+
+
+
+
+<div class="modal fade" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content" style="margin-top: 100px;">
+            <form action="/vmware/manage/nodes/" method="post" >
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                 
+                <h4 class="modal-title">选择工单类型</h4>
+              </div>
+              <div class="modal-body">
+                <p>
+				
+				<a href="/vmware/order/change/{{task_id}}/"><span class="label label-success" style="font-size:14px;height:25px;line-height:25px;width:85px;text-align:center;">变更配置</span></a>
+				
+				
+                </p>
+              </div>
+              
+              <div class="modal-footer">
+              <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">确定</button>
+            </div>
+            </form>
+              </div>
+          </div>
+          
+</div>
+
+
+
+
+
+
+
+
+{% endblock %}
