@@ -144,7 +144,7 @@ def UserRegisterActive(request,id,username,register_time):
     mail_dict['content'] = u'请点击下面的“激活”按钮，激活您%s的账户。如您未在%s进行过注册，请忽略此邮件。' % (websets.Gettitle(),websets.Gettitle())
     mail_dict['value'] = u'激活'
     mail_dict['url'] = send_url
-    sendmail([str(username) + str(systems.GetMailAdd()),],mail_title,mail_dict)
+    sendmail([str(username) + str(websets.GetMailAdd()),],mail_title,mail_dict)
     
 def UserResetPwd(request,passwd,mail):
     domain_url  = request.META.get('HTTP_HOST')
@@ -153,7 +153,7 @@ def UserResetPwd(request,passwd,mail):
     mail_dict['content'] = u'您的%s账户密码已重置为： %s ,请尽快至平台使用新密码进行密码修改！' % (websets.Gettitle(),passwd)
     mail_dict['value'] = u'修改密码'
     mail_dict['url'] = 'http://%s/User/passwd/update/' % domain_url
-    sendmail([mail + str(systems.GetMailAdd())],mail_title,mail_dict)
+    sendmail([mail + str(websets.GetMailAdd())],mail_title,mail_dict)
     
     
     
