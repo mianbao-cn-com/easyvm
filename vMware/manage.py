@@ -719,7 +719,7 @@ class VM_Create:
                             error_rs['name'] = name_list[xyz]
                             error_rs['rs'] = 1
                             error_rs['time'] = time.time()
-                            right_rs['ip'] = ip_list[xyz]
+                            error_rs['ip'] = ip_list[xyz]
                             order_vm_open_log(**error_rs).save()
                             break
                         time.sleep(5)
