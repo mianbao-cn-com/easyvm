@@ -415,8 +415,8 @@ class OrderInfoGenerate:
     def CustomizationType(self):
         template_version = self.__order.template.template.systemversion
         types=0
-        linux_list = ['CentOS','Red Hat']
-        windows_list = ['Windows']
+        linux_list = ['CentOS','Red Hat','inux','entO','Red','SUSE','Debian','Sianu']
+        windows_list = ['Windows','indow']
         linux_rs = [ True for x in linux_list if x in template_version]
         win_rs = [ True for x in windows_list if x in template_version]
         if linux_rs:
@@ -689,16 +689,22 @@ class VM_Create:
                 net_list['domain'] = 'Mianbao.cn.com'
                 net_list['ip'] = ip_list[xyz]
                 pub_list['data'] = net_list
+                pub_list['data']['adminpw'] = 'Howbuy1!'
                 if pub_list.has_key('network'):
                     del pub_list['network']
                 if pub_list.get('customize') == 'SYSPREP':
                     del pub_list['customize']
                 vm_open_log = order_vm_open_log.objects.filter(ip=net_list['ip'],name=pub_list['name'],order=self.__order).count()
                 if vm_open_log == 0:
-                    clone_rs = vm.clone(**pub_list)
-    
+                    try:
+                        clone_rs = vm.clone(**pub_list)
+                    except Exception,e:
+                        clone_rs = 'error'
                     while True:
-                        runing_status = clone_rs.get_state()
+                        if clone_rs != 'error':
+                            runing_status = clone_rs.get_state()
+                        else:
+                            runing_status = 'error'
                         if runing_status == 'success':
                             right_rs = {'order':self.__order}
                             right_rs['name'] = name_list[xyz]

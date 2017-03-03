@@ -26,7 +26,7 @@ SECRET_KEY = '*c0fa)z+mtnq$2r#8h&4hkl^=xz03j^0wl0fg@5#fs0iy9r&an'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 path_app = os.listdir(BASE_DIR)

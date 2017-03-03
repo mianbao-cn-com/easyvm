@@ -16,7 +16,7 @@ from getapi import *
 from getvms import DATA_PROCESS
 from getvms import DATA_PROCESS,GETNODE
 from Public.publiclog import logs
-
+from Mianbao.websettings import websetting
 from django.db import transaction
 
 
@@ -31,13 +31,6 @@ def Vms_check():
                 if not isinstance(server,int):
                     GetVmsInfo(server,vc_id)
                     vc.Discon()
-                '''
-                else:
-                    mail_title = u'VC连接出错 %s ' % vc_id
-                    mail_dict = {'title':u'VC连接出错'}
-                    mail_dict['content'] = u'可能是由于不能连通VC导致的！'
-                    CrontabErrorMailSend(mail_title,mail_dict)
-                '''
     except Exception,e:
         mail_title = u'【vmware crontab】定时任务执行出错'
         mail_dict = {'title':u'VMware 定时任务执行错误'}
@@ -54,13 +47,6 @@ def Network_check():
                 if not isinstance(server,int):
                     GetNetworkInfo(server,vc_id)
                     vc.Discon()
-                '''
-                else:
-                    mail_title = u'VC连接出错'
-                    mail_dict = {'title':u'VC连接出错'}
-                    mail_dict['content'] = u'可能是由于不能连通VC导致的！'
-                    CrontabErrorMailSend(mail_title,mail_dict)
-                '''
     except Exception,e:
         mail_title = u'【vmware crontab】定时任务执行出错'
         mail_dict = {'title':u'VMware 定时任务执行错误'}
@@ -92,7 +78,9 @@ def GetNetworkInfo(server,vc_id):
         CrontabErrorMailSend(mail_title,mail_dict)
            
 def CrontabErrorMailSend(mail_title,mail_dict):
-    sendmail(['huifei.han' + str(systems.GetMailAdd())],mail_title,mail_dict)        
+    system = websetting()
+    pass
+    #sendmail(['huifei.han' + str(system.GetMailAdd())],mail_title,mail_dict)  
         
         
         

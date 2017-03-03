@@ -186,6 +186,17 @@ def UnitConvert(v1,start):
         a += 1
     return str(v1)+str(li[a])
 
+@register.simple_tag
+def SystemTypeCon(str):
+    system_dict = {
+                'CentOS': 'CentOS',
+                'Microsoft Windows Server 2008 R2 (64 位)':'W2K8(64 位)',
+                'Microsoft Windows Server 2008 R2 (32 位)':'W2K8(32 位)',
+    }
+    
+    for x,y in system_dict.items():
+        if x in str:
+            return y
 '''
 @about vms
 '''

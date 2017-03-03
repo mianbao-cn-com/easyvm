@@ -20,7 +20,7 @@ from Mianbao.public import public,GetFormPost,CheckPermission,cper,GenerateAtoZ
 from manage import MANAGE,OrderInfoGenerate,VM_Create
 from public_fun import *
 from django.db import connection
-from crontab import GetVmsInfo,GetNetworkInfo,CrontabErrorMailSend,Network_check
+from crontab import GetVmsInfo,GetNetworkInfo,CrontabErrorMailSend,Network_check,Vms_check
 from Public.wechat import send_msg
 from pysphere.vi_property import VIProperty
 from Public.public import GetWechatSecret,GetWechatID,GetWechatCorp
@@ -33,9 +33,8 @@ from agent import CreateVM
 '''
 def vmware_test(request):
     print 'start....'
-    #Network_check()
+    Vms_check()
     print 'end.....'
-    CreateVM()
     return HttpResponse('OK123')
     '''
     
