@@ -154,7 +154,10 @@ class api:
         '''
         @run dict
         '''
-        vm_folder = vm.properties.parent.name
+        try:
+            vm_folder = vm.properties.parent.name
+        except Exception,e:
+            vm_folder = 'vm'
         allvms['run'] = {'folder':vm_folder}
         
         '''

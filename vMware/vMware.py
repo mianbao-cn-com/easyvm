@@ -33,7 +33,9 @@ from agent import CreateVM
 '''
 def vmware_test(request):
     print 'start....'
-    Vms_check()
+    rs = order.objects.get(id=99)
+    print rs.resource.node.dc.name
+    #CreateVM()
     print 'end.....'
     return HttpResponse('OK123')
     '''
@@ -204,7 +206,9 @@ def CustomAdd(request):
             ret['status'] = 'error'
             ret['message_title'] = '新增失败'
             ret['message_content'] = '每个VC下面只能有一个命名规则，而此VC下已有命名规则！'
-        return render_to_response('public/message.html',ret)
+            return render_to_response('public/message.html',ret)
+        else:
+            return redirect('/vMware/customization/')
     else:
         ret['vcs'] = vcenter.objects.filter(status=0).values('id','host','alias')
         return render_to_response('vmware/manage/custome_add.html',ret)
@@ -274,6 +278,7 @@ def OrderDetail(request,id):
     ret['info'] = order_resource.objects.filter(order__id=id)
     ret['flow'] = order_resource.objects.filter(order__id=id)
     ret['errors'] = order_error.objects.filter(order__id=id,status=0)
+    ret['errors_2'] = order_vm_open_log.objects.filter(order__id=id,rs=1)
     return render_to_response('vmware/manage/order_detail.html',ret)
 
 def OrderPay(request,id):
@@ -389,7 +394,7 @@ def Resource(request):
         return redirect('/vMware/resource/')
     else:
         ret['resources'] = resource.objects.filter()
-        ret['vcs'] = vcenter.objects.filter().values('host','id')
+        ret['vcs'] = vcenter.objects.filter(status=0).values('host','id')
         return render_to_response('vmware/manage/resource.html',ret)
 
 def ResourceDel(request,id):

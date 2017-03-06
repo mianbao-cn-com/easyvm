@@ -162,7 +162,7 @@ class MANAGE:
     
     def OrderPaySendMail(self,order_id,html_add=u''):
         order_object = order.objects.get(id=order_id)
-        order_log = order_vm_open_log.objects.filter(order__id = order_id)
+        order_log = order_vm_open_log.objects.filter(order__id = order_id,rs=0)
         order_resource_gen = order_resource.objects.filter(order__id=order_id)
         mail_part = u"=" * 30
         mail_html = u"<br>资源位置：%s<br><br>申请用途：%s <br>" % (order_object.resource.name, order_object.project)
@@ -533,7 +533,10 @@ class VM_Create:
         return public_list,net_list
     
     def FloderCheck(self,folder_name,parent_folder_name='vm'):
-        folders = self.__s._retrieve_properties_traversal(property_names=['name'], obj_type='Folder')
+        dc_id = self.__order.resource.node.dc.datacenter_id
+        nf = [ x for x,y in self.__s.get_datacenters().items() if x ==dc_id]
+        nfmor = nf[0] if len(nf) > 0 else None
+        folders = self.__s._retrieve_properties_traversal(property_names=['name'], from_node=nfmor, obj_type='Folder')
         folder = list()
         rs = None
         for f in folders:
@@ -701,10 +704,15 @@ class VM_Create:
                     except Exception,e:
                         clone_rs = 'error'
                     while True:
+                        print clone_rs,'clone_rs'
                         if clone_rs != 'error':
-                            runing_status = clone_rs.get_state()
+                            try:
+                                runing_status = clone_rs.get_state()
+                            except Exception,e:
+                                runing_status = 'error'
                         else:
                             runing_status = 'error'
+                        print runing_status,'runing_status'
                         if runing_status == 'success':
                             right_rs = {'order':self.__order}
                             right_rs['name'] = name_list[xyz]
@@ -715,6 +723,7 @@ class VM_Create:
                             self.FromVlanGetNetwork(net_list['vlan'],pub_list['host'],pub_list['name'])
                             break
                         elif runing_status == 'error':
+                            print 44567
                             error_rs = {'order':self.__order}
                             error_rs['name'] = name_list[xyz]
                             error_rs['rs'] = 1

@@ -35,45 +35,46 @@ class Token(object):
         return self.access_token
 
 def send_msg(userid,title, content):
-    corpid = GetWechatCorp()
-    corpsecret = GetWechatSecret()
-    qs_token = Token(corpid=corpid, corpsecret= corpsecret).get_token()
-    url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={0}".format(qs_token)
-    payload = {
-        "touser": userid,
-        "msgtype": "text",
-        "agentid": GetWechatID(),
-        "text": {
-            "content": "标题:\n{0}\n内容:\n{1}".format(title, content)
-        },
-        "safe": "0"
-    }
-    ret = requests.post(url, data=json.dumps(payload,ensure_ascii=False))
-    print ret.json()
+    if GetWechatCorp() and GetWechatSecret() and GetWechatID():
+        corpid = GetWechatCorp()
+        corpsecret = GetWechatSecret()
+        qs_token = Token(corpid=corpid, corpsecret= corpsecret).get_token()
+        url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={0}".format(qs_token)
+        payload = {
+            "touser": userid,
+            "msgtype": "text",
+            "agentid": GetWechatID(),
+            "text": {
+                "content": "标题:\n{0}\n内容:\n{1}".format(title, content)
+            },
+            "safe": "0"
+        }
+        ret = requests.post(url, data=json.dumps(payload,ensure_ascii=False))
+    
     
 def send_news_message(to_user,title, content, picurl="", alert_url=""):
-    corpid = 'wx3b4e2ac9f0882724'
-    corpsecret = 'ctK158jLHsWpOCob3Rt070keQYANPCxGjE1l_f35jUfxo7nqIkdbrqqFkOCLWC4u'
-    qs_token = Token(corpid=corpid, corpsecret= corpsecret).get_token()
-    url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={0}".format(qs_token)
-    payload = {
-        "touser": "%s" % to_user,
-        "msgtype": "news",
-        "agentid": 2,
-        "news": {
-            "articles": [
-                {
-                    "title": title,
-                    "description": content,
-                    "url": alert_url.encode('utf-8'),
-                    "picurl": picurl.encode('utf-8'),
-                },
-            ],
-        },
-        "safe": "0"
-    }
-    ret = requests.post(url, data=json.dumps(payload,ensure_ascii=False).encode('utf-8'))
-    print ret.json()
+    if GetWechatCorp() and GetWechatSecret() and GetWechatID():
+        corpid = GetWechatCorp()
+        corpsecret = GetWechatSecret()
+        qs_token = Token(corpid=corpid, corpsecret= corpsecret).get_token()
+        url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={0}".format(qs_token)
+        payload = {
+            "touser": "%s" % to_user,
+            "msgtype": "news",
+            "agentid": GetWechatID(),
+            "news": {
+                "articles": [
+                    {
+                        "title": title,
+                        "description": content,
+                        "url": alert_url.encode('utf-8'),
+                        "picurl": picurl.encode('utf-8'),
+                    },
+                ],
+            },
+            "safe": "0"
+        }
+        ret = requests.post(url, data=json.dumps(payload,ensure_ascii=False).encode('utf-8'))
 
 if __name__ == "__main__":
     '''

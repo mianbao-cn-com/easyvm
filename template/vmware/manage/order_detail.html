@@ -24,6 +24,16 @@ td {padding-top: 15px;}
 	{% endfor %}
 {% endif %}
 
+{% if permission.vmware_manage %}
+	{% for error in errors_2 %}
+		<div class="alert alert-danger alert-dismissable" style="width: 75%;min-width: 1125px;">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+			<h4><i class="icon fa fa-ban"></i> 虚拟开通过程中发生错误</h4>
+			虚拟机在开通的过程中发生错误，可能因为管理员主动取消任务，或VC发生异常错误。
+		</div>
+	{% endfor %}
+{% endif %}
+
 <div class="box box-primary" style="width: 75%;min-width: 1125px;">
 	<div style="width:80%;margin:20px;">
             <div class="box-header with-border">
