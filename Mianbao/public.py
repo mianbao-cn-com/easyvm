@@ -103,15 +103,18 @@ def sendmail(receiver, subject, html,att=None,att_name = None):
         att["Content-Type"] = 'application/octet-stream'  
         att["Content-Disposition"] = 'attachment; filename="%s"' % att_name
         msg.attach(att)
-    smtp = smtplib.SMTP()  
-    smtp.connect(mails.mail_smtp)
-    smtp.login(mails.mail_user, mails.mail_pwd)
+    
     try:
+        smtp = smtplib.SMTP()  
+        smtp.connect(mails.mail_smtp)
+        smtp.login(mails.mail_user, mails.mail_pwd)
+    
         smtp.sendmail(mails.mail_user, receiver, msg.as_string())  
         smtp.quit()
         return 0
-    except Exception,e:
-        return e.message
+    except smtplib.SMTPException:
+        return '邮件发送失败，请检查邮件配置！'
+
 
 def unit_convert(v1,start=0):
     v1 = int(v1)

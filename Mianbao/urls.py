@@ -39,10 +39,6 @@ urlpatterns = [
     url(r'^logout/', Logout),
 ]
 
-
-if settings.DEBUG is False:
-    urlpatterns += patterns('',url(r'^static/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': settings.STATICFILES_DIRS[0],}),)
-
 [ urlpatterns.append(url(r'^%s/' % y, include(y + '.urls'))) for y in Apps ]
 
 

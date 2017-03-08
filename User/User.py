@@ -59,10 +59,11 @@ def Register(request):
         rs = users.Add(form_value)
         if rs:
             PublicLog(rs,u'用户注册',2).Create
-            UserRegisterActive(request,rs,form_value['name'],form_value['register_time'])
-            UserRegisterRight(ret)
+            rs = UserRegisterActive(request,rs,form_value['name'],form_value['register_time'])
+            print 'fun_rs:',rs
+            ret = UserRegisterRight(ret) if rs == 0 else MailSettingError(ret,rs)
         else:
-            UserRegisterError(ret)
+            ret = UserRegisterError(ret)
         return render_to_response('public/message.html',ret)
     else:
         ret['departments'] = GetGroup()

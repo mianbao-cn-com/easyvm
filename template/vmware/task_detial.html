@@ -14,7 +14,7 @@
     <!-- /.timeline-label -->
 	{% for x in task_detial%}
 	{% if x.status <= 2 %}
-	<a class="btn btn-danger" href="/vmware/task/recall/{{x.id}}" style="float: right;margin-top: -45px;margin-right: 100px;position: inherit;width: 60px;">
+	<a class="btn btn-danger" href="/vmware/task/recall/{{x.id}}/" style="float: right;margin-top: -45px;margin-right: 100px;position: inherit;width: 60px;">
 		<i class="halflings-icon white fa fa-trash">撤回</i> 
 	</a>
 	{% endif %}
@@ -84,7 +84,7 @@
             <a class="btn btn-danger" href="/vmware/order/ok/{{m.id}}/" style="float:left;margin-top: -35px;position: inherit;width: 60px;">
 				<i style="font-style: inherit;">完成</i> 
 			</a>
-                <a class="btn btn-success" href="/vmware/order/follow/{{m.id}}/1" style="float: right;margin-top: -35px;position: inherit;width: 60px;">
+                <a class="btn btn-success" href="/vmware/order/follow/{{m.id}}/1/" style="float: right;margin-top: -35px;position: inherit;width: 60px;">
 		<i style="font-style: inherit;">追单</i> 
 				</a>
 				{% endif %}

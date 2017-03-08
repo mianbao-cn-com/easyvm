@@ -33,9 +33,7 @@ from agent import CreateVM
 '''
 def vmware_test(request):
     print 'start....'
-    rs = order.objects.get(id=99)
-    print rs.resource.node.dc.name
-    #CreateVM()
+    Vms_check()
     print 'end.....'
     return HttpResponse('OK123')
     '''
@@ -421,6 +419,7 @@ def Vm(request):
     ret = public(request,'vm','虚拟机','列表')
     ret['vms'] = vms.objects.filter(status=0,type=0)
     ret['num'] = ret['vms'].count()
+    ret['errors'] = vc_error.objects.filter(status=0)
     return render_to_response('vmware/vmware_list.html',ret)
     
 

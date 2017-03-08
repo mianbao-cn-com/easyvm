@@ -166,7 +166,15 @@ def ReportError(order_id,item,detail,key):
         error['status'] = 0
         order_error(**error).save()
 
-
+def VcErrorReoprt(vc_id,key,val):
+    vc = vcenter.objects.get(id=vc_id)
+    error_num = vc_error.objects.filter(**{'vc':vc,'key':key,'val':val,'status':0}).count()
+    if error_num == 0:
+        rs = vc_error(**{'vc':vc,'key':key,'val':val,'status':0})
+        rs.save()
+    
+def VcStatusUpdate(vc_id):
+    vc_error.objects.filter(vc__id = vc_id,status=0).update(status=1)
 
 
 

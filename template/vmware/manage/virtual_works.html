@@ -141,11 +141,11 @@
       	
       	<td>
       	{% if x.check_user == 0 %}
-      	<a class="btn btn-success" href="/vmware/works/claim/{{x.id}}">认领 </a>
+      	<a class="btn btn-success" href="/vmware/works/claim/{{x.id}}/">认领 </a>
       	{% elif x.check_user == uid %}
 		<a class="btn btn-success" href="/vmware/order/follow/{{x.id}}/1/">回复</a>
 		{% endif %}
-		<a class="btn btn-success" href="/vmware/task/detial/45">
+		<a class="btn btn-success" href="/vmware/task/detial/45/">
 			<i class="halflings-icon white fa fa-fw  fa-bars"></i>  
 		</a>
 		</td>

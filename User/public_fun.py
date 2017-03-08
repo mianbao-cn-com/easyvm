@@ -75,6 +75,13 @@ def UserRegisterError(ret):
     ret['message_content'] = '注册失败，请联系管理员询问原因'
     return ret
 
+def MailSettingError(ret,rs):
+    ret['message_url'] = '/login/'
+    ret['status'] = 'error'
+    ret['message_title'] = '邮箱配置错误'
+    ret['message_content'] = rs
+    return ret
+
 def UserActiveRight(ret):
     ret['message_url'] = '/login/'
     ret['status'] = 'right'
@@ -144,7 +151,10 @@ def UserRegisterActive(request,id,username,register_time):
     mail_dict['content'] = u'请点击下面的“激活”按钮，激活您%s的账户。如您未在%s进行过注册，请忽略此邮件。' % (websets.Gettitle(),websets.Gettitle())
     mail_dict['value'] = u'激活'
     mail_dict['url'] = send_url
-    sendmail([str(username) + str(websets.GetMailAdd()),],mail_title,mail_dict)
+    print 'sendmail:',str(username) + str(websets.GetMailAdd())
+    rs = sendmail([str(username) + str(websets.GetMailAdd()),],mail_title,mail_dict)
+    print 'sendrs:',rs
+    return 0 if rs == 0 else rs
     
 def UserResetPwd(request,passwd,mail):
     domain_url  = request.META.get('HTTP_HOST')

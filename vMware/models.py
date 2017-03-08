@@ -26,7 +26,11 @@ class vcenter(models.Model):
     status = models.IntegerField() #0：正常可用 ，1禁用 ，10000：删除状态
     alias = models.CharField(max_length=50,default=0)
 
-
+class vc_error(models.Model):
+    vc = models.ForeignKey(vcenter)
+    key = models.CharField(max_length=50)
+    val = models.TextField(null=True)
+    status = models.IntegerField()
 '''
 @about VM info
 '''

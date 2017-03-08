@@ -80,8 +80,10 @@ class CheckSession:
         return False if all((self.uid,self.mail)) else True
     
     def HistoryUrl(self):
-        history_url = self.request.META.get('PATH_INFO','/Dashboard/')
-        history_url = '/Dashboard/' if history_url == '/' else history_url
+        history_urls = self.request.META.get('PATH_INFO','/Dashboard/')
+        if '.' not in history_urls:
+            history_url = history_urls
+        history_url = '/Dashboard/' if history_url == '/' or u'static/' in history_url else history_url
         if history_url not in self.white_url:
             for x in self.blurry_white_list:
                 if x not in history_url:

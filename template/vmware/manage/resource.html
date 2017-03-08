@@ -73,13 +73,13 @@
                   	{% endif %}
                   </td>
                   <td>
-                  <a class="btn btn-success" {% if x.status == 0 %}href="/vMware/resource/disable/{{x.id}}/"{% else %}href="/vMware/resource/enable/{{x.id}}"{% endif %}>
+                  <a class="btn btn-success" {% if x.status == 0 %}href="/vMware/resource/disable/{{x.id}}/"{% else %}href="/vMware/resource/enable/{{x.id}}/"{% endif %}>
 					<i class="halflings-icon white">
 						{% if x.status == 0 %}禁用{% else %}启用{% endif %}
 					</i>
 				  </a>
                   
-					<a class="btn btn-danger" href="/vMware/resource/disable/{{x.id}}">
+					<a class="btn btn-danger" href="/vMware/resource/disable/{{x.id}}/">
 					<i class="halflings-icon white fa fa-fw fa-trash"></i>
 					</a>
 					

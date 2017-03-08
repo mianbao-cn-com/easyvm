@@ -28,7 +28,7 @@
             <tbody>
                {% for item in user_task %}
 				<tr>
-					<td class="center" style="line-height: 34px;"><a href="/vmware/task/detial/{{item.id}}">{{ item.remark }}</a></td>
+					<td class="center" style="line-height: 34px;"><a href="/vmware/task/detial/{{item.id}}/">{{ item.remark }}</a></td>
 					<td class="center" style="line-height: 34px;">{% from_vmid_get_vmname item.template_name %}</td>
 					<td class="center" style="line-height: 34px;">{{ item.num }}台</td>
 					<td class="center" style="line-height: 34px;">{% vmid_configure item.template_name %}</td>
@@ -37,7 +37,7 @@
 					<td class="center" style="line-height: 34px;">{% day_con item.powoff_time %}</td>
 					<td class="center" style="line-height: 34px;">{% get_order_status_china item.status %}</td>
 					<td class="center" style="line-height: 34px;">
-						<a class="btn btn-success" href="/vmware/task/detial/{{item.id}}">
+						<a class="btn btn-success" href="/vmware/task/detial/{{item.id}}/">
 							<i class="halflings-icon white fa fa-fw  fa-bars"></i>  
 						</a>
 					</td>

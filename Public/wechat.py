@@ -75,12 +75,7 @@ def send_news_message(to_user,title, content, picurl="", alert_url=""):
             "safe": "0"
         }
         ret = requests.post(url, data=json.dumps(payload,ensure_ascii=False).encode('utf-8'))
+        print ret
 
 if __name__ == "__main__":
-    '''
-    userid = sys.argv[1]
-    title = sys.argv[2]
-    content = sys.argv[3]
-    send_msg(userid, title, content)
-    '''
-    send_news_message("18321628933", '新虚拟机申请', '标题:<br>新虚拟机申请<br>内容:<br>资源位置：测试环境 <br>申请用户：mianbao <br>使用模板：C <br>申请数量 1 台')
+    pass
