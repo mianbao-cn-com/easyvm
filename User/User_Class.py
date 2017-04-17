@@ -99,6 +99,10 @@ class User:
         rs = user.objects.filter(id=self.__uid)
         return rs[0] if len(rs) == 1 else False
     
+    def GetUserList(self):
+        rs = user.objects.filter(active=0).values('id','name')
+        return rs
+        
     def GetUserGroup(self):
         rs = group.objects.filter(user__id = self.__uid)
         return rs

@@ -18,7 +18,7 @@ from models import *
 from User.models import department
 from Mianbao.public import public,GetFormPost
 from manage import Application
-from User.User import User
+from User.User_Class import User
 
 
 
